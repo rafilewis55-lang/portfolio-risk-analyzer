@@ -151,6 +151,7 @@ function renderResults(data) {
 
     renderScorecard(data);
     renderHeatmap(data);
+    renderScenarioCards();
     renderCorrelation(data);
     renderOverlaps(data);
     renderNarrative(data);
@@ -395,6 +396,21 @@ function resetView() {
     document.getElementById("resultsSection").classList.remove("active");
     document.getElementById("warningsSection").style.display = "none";
     analysisData = null;
+    // Reset stress test state
+    stressTestData = null;
+    selectedScenarioId = null;
+    selectedHorizon = "3_month";
+    heatmapViewMode = "normal";
+    normalHeatmapHTML = null;
+    stressedHeatmapHTML = null;
+    const toggleBar = document.getElementById("heatmapViewToggle");
+    if (toggleBar) toggleBar.style.display = "none";
+    const banner = document.getElementById("stressedBanner");
+    if (banner) banner.style.display = "none";
+    document.getElementById("stressResults").style.display = "none";
+    document.getElementById("runStressBtn").disabled = true;
+    const cards = document.querySelectorAll(".scenario-card");
+    cards.forEach(c => c.classList.remove("selected"));
 }
 
 
@@ -545,5 +561,365 @@ async function analyzeUpload() {
         document.getElementById('inputSection').style.display = 'block';
     } finally {
         document.getElementById('loadingSection').style.display = 'none';
+    }
+}
+
+
+// ── Scenario Stress Test ──────────────────────────────────────────────────
+
+let stressTestData = null;
+let selectedScenarioId = null;
+let selectedHorizon = "3_month";
+let heatmapViewMode = "normal";
+let normalHeatmapHTML = null;
+let stressedHeatmapHTML = null;
+
+async function renderScenarioCards() {
+    const container = document.getElementById("scenarioCards");
+    if (!container) return;
+
+    try {
+        const resp = await fetch("/api/scenarios");
+        const data = await resp.json();
+        const scenarios = data.scenarios || [];
+
+        // Group by category
+        const groups = {};
+        scenarios.forEach(s => {
+            if (!groups[s.category]) groups[s.category] = [];
+            groups[s.category].push(s);
+        });
+
+        let html = "";
+        for (const [cat, items] of Object.entries(groups)) {
+            items.forEach(s => {
+                html += `
+                <div class="scenario-card" data-id="${s.id}" onclick="selectScenario('${s.id}', this)" title="${s.description}">
+                    <div class="scenario-emoji">${s.emoji}</div>
+                    <div class="scenario-name">${s.name}</div>
+                    <div class="scenario-badges">
+                        <span class="category-badge category-${s.category}">${s.category}</span>
+                        <span class="confidence-badge confidence-${s.confidence}">${s.confidence}</span>
+                    </div>
+                </div>`;
+            });
+        }
+        container.innerHTML = html;
+    } catch (err) {
+        container.innerHTML = '<p style="color:var(--text-muted)">Could not load scenarios.</p>';
+    }
+}
+
+function selectScenario(scenarioId, el) {
+    document.querySelectorAll(".scenario-card").forEach(c => c.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedScenarioId = scenarioId;
+    document.getElementById("runStressBtn").disabled = false;
+}
+
+function selectHorizon(horizon) {
+    selectedHorizon = horizon;
+    document.querySelectorAll(".horizon-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".horizon-btn").forEach(b => {
+        if (
+            (horizon === "1_week" && b.textContent.includes("1 Week")) ||
+            (horizon === "3_month" && b.textContent.includes("3 Month")) ||
+            (horizon === "1_year" && b.textContent.includes("1 Year"))
+        ) {
+            b.classList.add("active");
+        }
+    });
+}
+
+async function runStressTest() {
+    if (!selectedScenarioId || !analysisData) return;
+
+    const tickers = analysisData.tickers;
+    const weights = tickers.map(t => analysisData.weights[t]);
+    const portfolioValue = parseFloat(document.getElementById("portfolioValue").value) || null;
+
+    // Build correlation matrix from analysisData
+    const corrMatrix = analysisData.portfolio_metrics?.correlation_matrix || {};
+
+    // Build individual volatilities from MRC data or use defaults
+    const indivVols = {};
+    tickers.forEach(t => {
+        const mrc = analysisData.portfolio_metrics?.mrc || {};
+        indivVols[t] = mrc[t] ? Math.abs(mrc[t]) * 5 : 0.30; // rough estimate
+    });
+
+    const requestBody = {
+        tickers,
+        weights,
+        scenario_id: selectedScenarioId,
+        time_horizon: selectedHorizon,
+        portfolio_value: portfolioValue,
+        existing_risk_scores: analysisData.risk_factors,
+        industry_map: analysisData.industry_map || {},
+        individual_volatilities: indivVols,
+        correlation_matrix: corrMatrix,
+    };
+
+    document.getElementById("stressLoading").style.display = "block";
+    document.getElementById("stressResults").style.display = "none";
+
+    try {
+        const resp = await fetch("/api/stress-test", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.error || "Stress test failed");
+        }
+
+        stressTestData = await resp.json();
+        renderStressResults(stressTestData);
+    } catch (err) {
+        alert("Stress test error: " + err.message);
+    } finally {
+        document.getElementById("stressLoading").style.display = "none";
+    }
+}
+
+function renderStressResults(data) {
+    document.getElementById("stressResults").style.display = "block";
+    renderStressDashboard(data);
+    renderStressNarrative(data);
+    setupStressedHeatmapToggle(data);
+}
+
+function renderStressDashboard(data) {
+    const container = document.getElementById("stressDashboard");
+    const mc = data.monte_carlo || {};
+    const pct = mc.percentiles || {};
+    const stocks = data.stock_impacts || [];
+    const channels = data.transmission_channels || [];
+    const protections = data.protections || [];
+    const dollars = data.dollar_estimates;
+
+    // Card 1: Impact Distribution
+    const expectedPct = (data.portfolio_expected_return * 100).toFixed(1);
+    const p5 = (pct.p5 * 100).toFixed(1);
+    const p95 = (pct.p95 * 100).toFixed(1);
+    const p50 = (pct.p50 * 100).toFixed(1);
+
+    // Normalize range for visual bar
+    const rangeMin = Math.min(pct.p5, -0.01);
+    const rangeMax = Math.max(pct.p95, 0.01);
+    const rangeSpan = rangeMax - rangeMin;
+    const medianPos = ((pct.p50 - rangeMin) / rangeSpan * 100).toFixed(0);
+    const zeroPos = ((0 - rangeMin) / rangeSpan * 100).toFixed(0);
+
+    let dollarHTML = "";
+    if (dollars) {
+        dollarHTML = `
+            <div class="impact-stats" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+                <div><span class="stat-highlight">Expected: $${dollars.expected_loss.toLocaleString()}</span></div>
+                <div>Worst case (5th %ile): $${dollars.worst_case_p5.toLocaleString()}</div>
+                <div>Best case (95th %ile): $${dollars.best_case_p95.toLocaleString()}</div>
+            </div>`;
+    }
+
+    let card1 = `
+        <div class="stress-card">
+            <h4>Impact Distribution (${data.time_horizon_label})</h4>
+            <div class="impact-range">
+                <div class="impact-range-marker" style="left:${medianPos}%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);margin-bottom:8px">
+                <span>${p5}%</span><span>median ${p50}%</span><span>${p95}%</span>
+            </div>
+            <div class="impact-stats">
+                <div><span class="stat-highlight">Expected return: ${expectedPct}%</span></div>
+                <div>P(loss > 10%): ${(mc.prob_loss_gt_10pct * 100).toFixed(0)}%</div>
+                <div>P(loss > 20%): ${(mc.prob_loss_gt_20pct * 100).toFixed(0)}%</div>
+                <div>P(positive): ${(mc.prob_positive * 100).toFixed(0)}%</div>
+            </div>
+            ${dollarHTML}
+        </div>`;
+
+    // Card 2: Per-Stock Impact Bars
+    const maxAbsReturn = Math.max(...stocks.map(s => Math.abs(s.expected_return)), 0.01);
+    let stockBarsHTML = stocks.map(s => {
+        const pctVal = (s.expected_return * 100).toFixed(1);
+        const isNeg = s.expected_return < 0;
+        const barWidth = (Math.abs(s.expected_return) / maxAbsReturn * 50).toFixed(0);
+        const barClass = isNeg ? "loss" : "gain";
+        const valClass = isNeg ? "negative" : "positive";
+        const barStyle = isNeg
+            ? `right:50%;width:${barWidth}%`
+            : `left:50%;width:${barWidth}%`;
+        return `
+            <div class="stock-impact-bar">
+                <span class="ticker-label">${s.ticker}</span>
+                <div class="bar-track">
+                    <div class="bar-fill ${barClass}" style="${barStyle}"></div>
+                </div>
+                <span class="bar-value ${valClass}">${pctVal}%</span>
+                <span class="bar-channel">${s.primary_channel}</span>
+            </div>`;
+    }).join("");
+
+    let card2 = `
+        <div class="stress-card">
+            <h4>Per-Stock Impact</h4>
+            ${stockBarsHTML}
+        </div>`;
+
+    // Card 3: Transmission Channels
+    let channelsHTML = channels.slice(0, 5).map(ch => `
+        <div class="channel-item">
+            <div>
+                <div class="channel-name">${ch.channel}</div>
+                ${ch.historical_analogue ? `<div class="channel-analogue">${ch.historical_analogue}</div>` : ""}
+            </div>
+        </div>`).join("");
+
+    let card3 = `
+        <div class="stress-card">
+            <h4>Transmission Channels</h4>
+            ${channelsHTML}
+        </div>`;
+
+    // Card 4: Protection Recommendations
+    let protsHTML = protections.slice(0, 4).map(p => `
+        <div class="protection-item">
+            <div class="protection-title">
+                ${p.recommendation}
+                <span class="effectiveness-badge effectiveness-${p.effectiveness}">${p.effectiveness}</span>
+            </div>
+            <div class="protection-detail">${p.rationale}</div>
+            <div class="protection-instruments">${p.instruments.join(", ")}</div>
+        </div>`).join("");
+
+    let card4 = `
+        <div class="stress-card">
+            <h4>Hedge Recommendations</h4>
+            ${protsHTML}
+        </div>`;
+
+    container.innerHTML = card1 + card2 + card3 + card4;
+}
+
+function renderStressNarrative(data) {
+    const container = document.getElementById("stressNarrative");
+    const narrative = data.narrative || "";
+    if (!narrative) {
+        container.innerHTML = "";
+        return;
+    }
+    const paragraphs = narrative.split("\n\n").filter(p => p.trim());
+    container.innerHTML = paragraphs.map(p => {
+        p = p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        if (p.includes("  - ")) {
+            const lines = p.split("\n").map(l => {
+                l = l.trim();
+                if (l.startsWith("- ")) return `<li>${l.substring(2)}</li>`;
+                return l;
+            });
+            return `<ul>${lines.join("")}</ul>`;
+        }
+        return `<p>${p}</p>`;
+    }).join("");
+}
+
+function setupStressedHeatmapToggle(data) {
+    const heatmapPanel = document.getElementById("heatmapPanel");
+    const container = document.getElementById("heatmapContainer");
+    if (!heatmapPanel || !container) return;
+
+    // Cache normal heatmap HTML
+    normalHeatmapHTML = container.innerHTML;
+
+    // Build stressed heatmap HTML
+    const stressedScores = data.stressed_risk_scores;
+    if (!stressedScores) return;
+
+    const tickers = analysisData.tickers;
+    const stressedPerHolding = stressedScores.per_holding || {};
+    const stressedWeighted = stressedScores.portfolio_weighted || {};
+    const deltas = stressedScores.deltas || {};
+    const portfolioDeltas = stressedScores.portfolio_deltas || {};
+    const benchmark = analysisData.risk_factors.benchmark || {};
+
+    let html = '<table class="heatmap-table"><thead><tr><th>Factor</th>';
+    tickers.forEach(t => html += `<th>${t}</th>`);
+    html += '<th>Portfolio</th><th>S&P 500</th></tr></thead><tbody>';
+
+    for (const [factor, label] of Object.entries(FACTOR_LABELS)) {
+        const tip = FACTOR_TOOLTIPS[factor] || "";
+        html += `<tr><td><div class="factor-label-cell">${label} ${tip ? infoIcon(tip) : ""}</div></td>`;
+        tickers.forEach(t => {
+            const score = (stressedPerHolding[t] || {})[factor] || 5;
+            const delta = (deltas[t] || {})[factor] || 0;
+            let deltaHTML = "";
+            if (delta > 0) deltaHTML = `<span class="score-delta up">+${delta}\u25B2</span>`;
+            else if (delta < 0) deltaHTML = `<span class="score-delta down">${delta}\u25BC</span>`;
+            html += `<td class="score-${Math.round(score)}">${score}${deltaHTML}</td>`;
+        });
+        const pw = (stressedWeighted[factor] || 5).toFixed(1);
+        const pd = portfolioDeltas[factor] || 0;
+        let pdHTML = "";
+        if (pd > 0) pdHTML = `<span class="score-delta up">+${pd.toFixed(1)}\u25B2</span>`;
+        else if (pd < 0) pdHTML = `<span class="score-delta down">${pd.toFixed(1)}\u25BC</span>`;
+        const bm = benchmark[factor] || 5;
+        html += `<td style="font-weight:700">${pw}${pdHTML}</td>`;
+        html += `<td>${bm}</td>`;
+        html += '</tr>';
+    }
+    html += '</tbody></table>';
+    stressedHeatmapHTML = html;
+
+    // Inject toggle bar if not already present
+    let toggleBar = document.getElementById("heatmapViewToggle");
+    if (!toggleBar) {
+        toggleBar = document.createElement("div");
+        toggleBar.id = "heatmapViewToggle";
+        toggleBar.className = "heatmap-view-toggle";
+        toggleBar.innerHTML = `
+            <button class="heatmap-toggle-btn active" onclick="toggleHeatmapView('normal')">Normal</button>
+            <button class="heatmap-toggle-btn" onclick="toggleHeatmapView('stressed')">Stressed</button>
+        `;
+        container.parentNode.insertBefore(toggleBar, container);
+    }
+    toggleBar.style.display = "flex";
+
+    // Inject stressed banner if not present
+    let banner = document.getElementById("stressedBanner");
+    if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "stressedBanner";
+        banner.className = "stressed-banner";
+        container.parentNode.insertBefore(banner, container);
+    }
+    banner.textContent = `Stressed view: ${data.scenario_name} (${data.time_horizon_label})`;
+    banner.style.display = "none";
+
+    // Reset to normal view
+    heatmapViewMode = "normal";
+    toggleBar.querySelectorAll(".heatmap-toggle-btn")[0].classList.add("active");
+    toggleBar.querySelectorAll(".heatmap-toggle-btn")[1].classList.remove("active");
+}
+
+function toggleHeatmapView(mode) {
+    const container = document.getElementById("heatmapContainer");
+    const banner = document.getElementById("stressedBanner");
+    const toggleBar = document.getElementById("heatmapViewToggle");
+    if (!container || !toggleBar) return;
+
+    heatmapViewMode = mode;
+
+    toggleBar.querySelectorAll(".heatmap-toggle-btn").forEach(b => b.classList.remove("active"));
+    if (mode === "normal") {
+        toggleBar.querySelectorAll(".heatmap-toggle-btn")[0].classList.add("active");
+        container.innerHTML = normalHeatmapHTML || container.innerHTML;
+        if (banner) banner.style.display = "none";
+    } else {
+        toggleBar.querySelectorAll(".heatmap-toggle-btn")[1].classList.add("active");
+        container.innerHTML = stressedHeatmapHTML || container.innerHTML;
+        if (banner) banner.style.display = "block";
     }
 }

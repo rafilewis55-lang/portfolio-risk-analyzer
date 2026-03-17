@@ -171,3 +171,86 @@ def _recommendations(grade: str, overlaps: list, hhi: float, n_eff: float) -> st
 
     bullets = "\n".join(f"  - {r}" for r in recs)
     return f"**Recommendations:**\n{bullets}"
+
+
+def generate_scenario_narrative(summary: dict, scenario: dict, time_horizon: str) -> str:
+    """Generate stress test narrative from scenario results. Template-based f-strings."""
+    horizon_labels = {"1_week": "1 week", "3_month": "3 months", "1_year": "1 year"}
+    horizon_label = horizon_labels.get(time_horizon, time_horizon)
+    name = scenario["name"]
+    confidence = scenario["confidence"]
+    category = scenario["category"]
+    expected = summary.get("portfolio_expected_return", 0)
+    mc = summary.get("monte_carlo", {})
+    percentiles = mc.get("percentiles", {})
+    prob_loss_10 = mc.get("prob_loss_gt_10pct", 0)
+    prob_loss_20 = mc.get("prob_loss_gt_20pct", 0)
+
+    # Impact summary paragraph
+    direction = "decline" if expected < 0 else "gain"
+    impact_para = (
+        f"**Scenario Impact — {name}:** Over a {horizon_label} horizon, "
+        f"this {confidence}-confidence {category.lower()} scenario is expected to produce "
+        f"a portfolio {direction} of {abs(expected)*100:.1f}%. "
+        f"The Monte Carlo simulation (10,000 runs) shows a median outcome of "
+        f"{percentiles.get('p50', 0)*100:.1f}%, with a 5th-95th percentile range of "
+        f"{percentiles.get('p5', 0)*100:.1f}% to {percentiles.get('p95', 0)*100:.1f}%."
+    )
+
+    if prob_loss_10 > 0.05:
+        impact_para += f" There is a {prob_loss_10*100:.0f}% probability of losses exceeding 10%."
+    if prob_loss_20 > 0.05:
+        impact_para += f" The probability of losses exceeding 20% is {prob_loss_20*100:.0f}%."
+
+    # Worst-hit holdings paragraph
+    stocks = summary.get("stock_impacts", [])
+    worst = [s for s in stocks if s["expected_return"] < 0][:3]
+    if worst:
+        worst_strs = []
+        for s in worst:
+            worst_strs.append(
+                f"{s['ticker']} ({s['expected_return']*100:.1f}%, primary channel: {s['primary_channel']})"
+            )
+        holdings_para = (
+            f"**Most Affected Holdings:** The worst-hit positions are {', '.join(worst_strs)}."
+        )
+        # Any positive performers?
+        gainers = [s for s in stocks if s["expected_return"] > 0]
+        if gainers:
+            gainer_strs = [f"{s['ticker']} ({s['expected_return']*100:+.1f}%)" for s in gainers[:2]]
+            holdings_para += f" Potential outperformers: {', '.join(gainer_strs)}."
+    else:
+        holdings_para = "**Most Affected Holdings:** No holdings show significant negative impact."
+
+    # Transmission channels paragraph
+    channels = summary.get("transmission_channels", [])[:3]
+    if channels:
+        ch_strs = []
+        for ch in channels:
+            analogue = ch.get("historical_analogue", "")
+            ch_str = f"{ch['channel']}"
+            if analogue:
+                ch_str += f" (historical analogue: {analogue})"
+            ch_strs.append(ch_str)
+        channels_para = (
+            f"**Key Transmission Channels:**\n"
+            + "\n".join(f"  - {s}" for s in ch_strs)
+        )
+    else:
+        channels_para = "**Key Transmission Channels:** General market risk-off dynamics."
+
+    # Protection suggestions paragraph
+    protections = summary.get("protections", [])[:3]
+    if protections:
+        prot_strs = []
+        for p in protections:
+            instruments = ", ".join(p.get("instruments", [])[:3])
+            prot_strs.append(f"{p['recommendation']} — {p['rationale']} Instruments: {instruments}")
+        prot_para = (
+            f"**Suggested Hedges:**\n"
+            + "\n".join(f"  - {s}" for s in prot_strs)
+        )
+    else:
+        prot_para = "**Suggested Hedges:** Consider broad market put protection and increased cash allocation."
+
+    return f"{impact_para}\n\n{holdings_para}\n\n{channels_para}\n\n{prot_para}"

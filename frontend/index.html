@@ -159,7 +159,39 @@
                 <div class="heatmap-container" id="heatmapContainer"></div>
             </div>
 
-            <!-- Panel 3: Correlation Matrix -->
+            <!-- Panel 3: Scenario Stress Test -->
+            <div class="panel" id="scenarioPanel">
+                <h3 class="panel-title">Scenario Stress Test
+                    <span class="info-icon">i<span class="tooltip">Simulate crisis scenarios against your portfolio. Select a scenario, choose a time horizon, and run a Monte Carlo stress test to see how each holding would be affected. Includes stressed risk heatmap, loss distributions, and hedge recommendations.</span></span>
+                </h3>
+                <div class="scenario-selector">
+                    <div class="scenario-cards-row" id="scenarioCards"></div>
+                    <div class="scenario-controls">
+                        <div class="horizon-toggle" id="horizonToggle">
+                            <button class="horizon-btn" onclick="selectHorizon('1_week')">1 Week</button>
+                            <button class="horizon-btn active" onclick="selectHorizon('3_month')">3 Months</button>
+                            <button class="horizon-btn" onclick="selectHorizon('1_year')">1 Year</button>
+                        </div>
+                        <div class="portfolio-value-input">
+                            <label for="portfolioValue">Portfolio Value ($):</label>
+                            <input type="number" id="portfolioValue" placeholder="e.g. 100000" min="0" step="1000">
+                        </div>
+                        <button class="btn btn-primary" id="runStressBtn" onclick="runStressTest()" disabled>
+                            Run Stress Test
+                        </button>
+                    </div>
+                </div>
+                <div class="stress-loading" id="stressLoading" style="display:none">
+                    <div class="spinner"></div>
+                    <p>Running Monte Carlo simulation...</p>
+                </div>
+                <div id="stressResults" style="display:none">
+                    <div class="stress-dashboard" id="stressDashboard"></div>
+                    <div class="narrative-text" id="stressNarrative"></div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Correlation Matrix -->
             <div class="panel" id="corrPanel">
                 <h3 class="panel-title">Correlation Matrix
                     <span class="info-icon">i<span class="tooltip">Pairwise return correlations over the lookback period. Values near +1.0 (red) mean stocks move together; near 0 (white) means independent; negative (green) means they move opposite. Lower correlations = better diversification.</span></span>

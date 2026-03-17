@@ -1,0 +1,737 @@
+{
+  "taiwan_invasion": {
+    "name": "China Invades Taiwan",
+    "emoji": "\ud83c\uddf9\ud83c\uddfc",
+    "category": "GEOPOLITICAL",
+    "confidence": "MEDIUM",
+    "description": "Full-scale Chinese military operation against Taiwan, triggering TSMC production shutdown, US-China decoupling, and global supply chain disruption.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.3,
+      "china_revenue_risk": 2.8,
+      "geopolitical_country_risk": 2.5,
+      "currency_risk": 1.8,
+      "regulatory_policy_risk": 1.5,
+      "leverage_credit_risk": 1.4,
+      "earnings_cyclicality": 1.6,
+      "sector_concentration": 1.5,
+      "supply_chain_concentration": 3.5,
+      "esg_energy_transition_risk": 1.1
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.08, "equity_std": 0.12 },
+      "3_month": { "equity_mean": -0.22, "equity_std": 0.25 },
+      "1_year": { "equity_mean": -0.18, "equity_std": 0.30 }
+    },
+    "sector_adjustments": {
+      "Semiconductor": { "return_modifier": -0.08 },
+      "Semiconductor Equip": { "return_modifier": -0.06 },
+      "Oil/Gas (Integrated)": { "return_modifier": 0.15 },
+      "Oil/Gas (Production and Exploration)": { "return_modifier": 0.12 },
+      "Precious Metals": { "return_modifier": 0.10 },
+      "Banks (Money Center)": { "return_modifier": -0.03 },
+      "Aerospace/Defense": { "return_modifier": 0.08 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "TSMC Production Shutdown",
+        "weight": 0.35,
+        "historical_analogue": "2011 Thai floods disrupted HDD supply for 6+ months; TSMC is 10x more critical",
+        "description": "TSMC produces ~90% of advanced semiconductors. A military conflict would halt production, creating a global chip famine lasting 12-24 months."
+      },
+      {
+        "channel": "US-China Trade Decoupling",
+        "weight": 0.25,
+        "historical_analogue": "2018-19 US-China trade war caused 15-20% drawdowns in exposed sectors",
+        "description": "Immediate sanctions, export controls, and asset freezes would sever remaining US-China economic ties."
+      },
+      {
+        "channel": "Energy Price Shock",
+        "weight": 0.20,
+        "historical_analogue": "1990 Gulf War oil spike (+70% in 3 months)",
+        "description": "Taiwan Strait shipping disruption affects ~40% of global container traffic, spiking energy and shipping costs."
+      },
+      {
+        "channel": "Risk-Off Capital Flight",
+        "weight": 0.20,
+        "historical_analogue": "Feb 2022 Russia-Ukraine: S&P 500 dropped 11% in first month",
+        "description": "Global flight to safety — US Treasuries, gold, and JPY surge; emerging market assets collapse."
+      }
+    ],
+    "monte_carlo_std_dev": 0.04,
+    "crisis_correlation_boost": 0.30
+  },
+  "rate_shock_up": {
+    "name": "Fed Rate Shock +200bp",
+    "emoji": "\ud83d\udcc8",
+    "category": "MACRO",
+    "confidence": "HIGH",
+    "description": "Federal Reserve forced to raise rates by 200bp due to inflation resurgence, repricing all duration-sensitive assets.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 2.5,
+      "china_revenue_risk": 1.0,
+      "geopolitical_country_risk": 1.1,
+      "currency_risk": 1.3,
+      "regulatory_policy_risk": 1.1,
+      "leverage_credit_risk": 2.0,
+      "earnings_cyclicality": 1.4,
+      "sector_concentration": 1.2,
+      "supply_chain_concentration": 1.0,
+      "esg_energy_transition_risk": 1.2
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.05, "equity_std": 0.08 },
+      "3_month": { "equity_mean": -0.15, "equity_std": 0.18 },
+      "1_year": { "equity_mean": -0.10, "equity_std": 0.22 }
+    },
+    "sector_adjustments": {
+      "Banks (Money Center)": { "return_modifier": 0.05 },
+      "Banks (Regional)": { "return_modifier": 0.03 },
+      "Brokerage & Investment Banking": { "return_modifier": 0.02 },
+      "REIT": { "return_modifier": -0.08 },
+      "Homebuilding": { "return_modifier": -0.10 },
+      "Software (System & Application)": { "return_modifier": -0.04 },
+      "Semiconductor": { "return_modifier": -0.03 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Duration Repricing",
+        "weight": 0.35,
+        "historical_analogue": "2022 rate hiking cycle: Nasdaq fell 33%, long-duration growth stocks worst hit",
+        "description": "Higher discount rates disproportionately compress valuations of high-growth, long-duration equities."
+      },
+      {
+        "channel": "Credit Tightening",
+        "weight": 0.25,
+        "historical_analogue": "2006-07 rate hikes preceded 2008 credit crisis",
+        "description": "Higher rates increase borrowing costs, stress leveraged balance sheets, and widen credit spreads."
+      },
+      {
+        "channel": "Housing Market Cooling",
+        "weight": 0.20,
+        "historical_analogue": "2022: 30yr mortgage rates doubled, existing home sales fell 35%",
+        "description": "Mortgage rates spike, reducing housing affordability and construction activity."
+      },
+      {
+        "channel": "EM Capital Outflows",
+        "weight": 0.20,
+        "historical_analogue": "2013 Taper Tantrum: EM equities fell 15% in 3 months",
+        "description": "Higher US rates attract global capital, strengthening USD and pressuring emerging markets."
+      }
+    ],
+    "monte_carlo_std_dev": 0.03,
+    "crisis_correlation_boost": 0.20
+  },
+  "us_recession": {
+    "name": "US Recession",
+    "emoji": "\ud83d\udcc9",
+    "category": "MACRO",
+    "confidence": "HIGH",
+    "description": "Standard US recession with GDP contracting 2-3%, unemployment rising to 6-7%, earnings declining 15-20%.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.3,
+      "china_revenue_risk": 1.2,
+      "geopolitical_country_risk": 1.2,
+      "currency_risk": 1.2,
+      "regulatory_policy_risk": 1.1,
+      "leverage_credit_risk": 1.8,
+      "earnings_cyclicality": 2.2,
+      "sector_concentration": 1.5,
+      "supply_chain_concentration": 1.1,
+      "esg_energy_transition_risk": 1.0
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.04, "equity_std": 0.07 },
+      "3_month": { "equity_mean": -0.18, "equity_std": 0.20 },
+      "1_year": { "equity_mean": -0.25, "equity_std": 0.28 }
+    },
+    "sector_adjustments": {
+      "Semiconductor": { "return_modifier": -0.05 },
+      "Software (System & Application)": { "return_modifier": -0.03 },
+      "Oil/Gas (Integrated)": { "return_modifier": -0.04 },
+      "Banks (Money Center)": { "return_modifier": -0.04 },
+      "Household Products": { "return_modifier": 0.05 },
+      "Healthcare Products": { "return_modifier": 0.04 },
+      "Utility (General)": { "return_modifier": 0.03 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Earnings Contraction",
+        "weight": 0.35,
+        "historical_analogue": "2001 recession: S&P 500 earnings fell 30%; 2008: fell 45%",
+        "description": "Corporate profits decline as consumer spending and business investment contract."
+      },
+      {
+        "channel": "Credit Deterioration",
+        "weight": 0.25,
+        "historical_analogue": "2008-09: high yield spreads widened from 300bp to 2100bp",
+        "description": "Rising defaults and wider spreads pressure leveraged companies and financial institutions."
+      },
+      {
+        "channel": "Consumer Spending Pullback",
+        "weight": 0.25,
+        "historical_analogue": "2008-09: consumer spending fell 3.3%, worst since WWII",
+        "description": "Rising unemployment and declining confidence reduce discretionary spending."
+      },
+      {
+        "channel": "Multiple Compression",
+        "weight": 0.15,
+        "historical_analogue": "Avg recession P/E contraction: 20-30% from peak",
+        "description": "Forward P/E multiples compress as growth expectations are revised downward."
+      }
+    ],
+    "monte_carlo_std_dev": 0.035,
+    "crisis_correlation_boost": 0.25
+  },
+  "us_recession_severe": {
+    "name": "US Severe Recession / Financial Crisis",
+    "emoji": "\ud83d\udea8",
+    "category": "MACRO",
+    "confidence": "HIGH",
+    "description": "2008-level financial crisis: GDP contracts 5%+, unemployment exceeds 10%, systemic bank stress, equity markets down 40-50%.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.5,
+      "china_revenue_risk": 1.5,
+      "geopolitical_country_risk": 1.5,
+      "currency_risk": 1.5,
+      "regulatory_policy_risk": 1.3,
+      "leverage_credit_risk": 2.8,
+      "earnings_cyclicality": 2.8,
+      "sector_concentration": 2.0,
+      "supply_chain_concentration": 1.3,
+      "esg_energy_transition_risk": 1.1
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.10, "equity_std": 0.15 },
+      "3_month": { "equity_mean": -0.30, "equity_std": 0.30 },
+      "1_year": { "equity_mean": -0.42, "equity_std": 0.35 }
+    },
+    "sector_adjustments": {
+      "Banks (Money Center)": { "return_modifier": -0.12 },
+      "Banks (Regional)": { "return_modifier": -0.15 },
+      "Brokerage & Investment Banking": { "return_modifier": -0.10 },
+      "Semiconductor": { "return_modifier": -0.06 },
+      "Household Products": { "return_modifier": 0.04 },
+      "Utility (General)": { "return_modifier": 0.03 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Systemic Credit Freeze",
+        "weight": 0.30,
+        "historical_analogue": "2008: Lehman collapse froze interbank lending, LIBOR-OIS spread hit 364bp",
+        "description": "Banking system stress causes credit markets to seize, cutting off corporate funding."
+      },
+      {
+        "channel": "Earnings Collapse",
+        "weight": 0.25,
+        "historical_analogue": "2008-09: S&P 500 EPS fell from $87 to $50 (-42%)",
+        "description": "Deep recession causes severe corporate earnings decline across all sectors."
+      },
+      {
+        "channel": "Wealth Destruction & Deleveraging",
+        "weight": 0.25,
+        "historical_analogue": "2008-09: US household wealth fell $13 trillion",
+        "description": "Falling asset prices force margin calls, fund redemptions, and consumer retrenchment."
+      },
+      {
+        "channel": "Global Contagion",
+        "weight": 0.20,
+        "historical_analogue": "2008: Crisis spread from US to global banking, EM currencies, and commodities",
+        "description": "US financial stress propagates globally through trade, capital flows, and confidence channels."
+      }
+    ],
+    "monte_carlo_std_dev": 0.05,
+    "crisis_correlation_boost": 0.35
+  },
+  "china_hard_landing": {
+    "name": "China Economic Hard Landing",
+    "emoji": "\ud83c\udde8\ud83c\uddf3",
+    "category": "GEOPOLITICAL",
+    "confidence": "MEDIUM",
+    "description": "China GDP growth collapses to 0-1%, property sector implodes, USD/CNY spikes, global demand shock.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.1,
+      "china_revenue_risk": 3.0,
+      "geopolitical_country_risk": 2.0,
+      "currency_risk": 1.8,
+      "regulatory_policy_risk": 1.2,
+      "leverage_credit_risk": 1.5,
+      "earnings_cyclicality": 1.8,
+      "sector_concentration": 1.3,
+      "supply_chain_concentration": 1.8,
+      "esg_energy_transition_risk": 1.0
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.06, "equity_std": 0.10 },
+      "3_month": { "equity_mean": -0.18, "equity_std": 0.22 },
+      "1_year": { "equity_mean": -0.15, "equity_std": 0.28 }
+    },
+    "sector_adjustments": {
+      "Semiconductor": { "return_modifier": -0.06 },
+      "Electronics (Consumer & Office)": { "return_modifier": -0.08 },
+      "Computers/Peripherals": { "return_modifier": -0.05 },
+      "Oil/Gas (Integrated)": { "return_modifier": -0.06 },
+      "Precious Metals": { "return_modifier": 0.05 },
+      "Banks (Money Center)": { "return_modifier": -0.02 },
+      "Household Products": { "return_modifier": 0.02 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "China Demand Collapse",
+        "weight": 0.35,
+        "historical_analogue": "2015-16 China slowdown: global commodities fell 30%, EM currencies lost 15%",
+        "description": "China represents 18% of global GDP. Sharp slowdown reduces demand for commodities, luxury goods, and tech hardware."
+      },
+      {
+        "channel": "Supply Chain Disruption",
+        "weight": 0.25,
+        "historical_analogue": "2020 COVID lockdowns disrupted Chinese manufacturing for months",
+        "description": "Economic distress may disrupt Chinese manufacturing and supply chains for global companies."
+      },
+      {
+        "channel": "Commodity Price Crash",
+        "weight": 0.20,
+        "historical_analogue": "2015: iron ore fell 40%, copper fell 25% on China slowdown fears",
+        "description": "China consumes 50%+ of industrial metals. Demand collapse crashes commodity prices."
+      },
+      {
+        "channel": "Currency & Capital Flight",
+        "weight": 0.20,
+        "historical_analogue": "2015-16: China burned $800B in reserves defending CNY",
+        "description": "CNY devaluation pressures EM currencies and increases FX volatility for exposed companies."
+      }
+    ],
+    "monte_carlo_std_dev": 0.04,
+    "crisis_correlation_boost": 0.25
+  },
+  "ai_bubble_burst": {
+    "name": "AI Capex Bubble Bursts",
+    "emoji": "\ud83e\udd16",
+    "category": "SECTOR",
+    "confidence": "MEDIUM",
+    "description": "AI monetization disappoints expectations. Hyperscaler capex cuts 40%+, GPU demand collapses, AI-adjacent stocks reprice sharply.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.1,
+      "china_revenue_risk": 1.2,
+      "geopolitical_country_risk": 1.0,
+      "currency_risk": 1.1,
+      "regulatory_policy_risk": 1.3,
+      "leverage_credit_risk": 1.3,
+      "earnings_cyclicality": 2.0,
+      "sector_concentration": 2.5,
+      "supply_chain_concentration": 1.8,
+      "esg_energy_transition_risk": 1.2
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.06, "equity_std": 0.10 },
+      "3_month": { "equity_mean": -0.20, "equity_std": 0.24 },
+      "1_year": { "equity_mean": -0.15, "equity_std": 0.28 }
+    },
+    "sector_adjustments": {
+      "Semiconductor": { "return_modifier": -0.15 },
+      "Semiconductor Equip": { "return_modifier": -0.12 },
+      "Software (System & Application)": { "return_modifier": -0.06 },
+      "Information Services": { "return_modifier": -0.04 },
+      "Oil/Gas (Integrated)": { "return_modifier": 0.02 },
+      "Banks (Money Center)": { "return_modifier": 0.01 },
+      "Utility (General)": { "return_modifier": 0.02 },
+      "Household Products": { "return_modifier": 0.02 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "AI Capex Reversal",
+        "weight": 0.35,
+        "historical_analogue": "2000-01 telecom capex bust: equipment makers lost 80-95% of value",
+        "description": "Hyperscalers (MSFT, GOOG, META, AMZN) slash GPU/datacenter spending as AI ROI disappoints."
+      },
+      {
+        "channel": "Semiconductor Demand Collapse",
+        "weight": 0.30,
+        "historical_analogue": "2000 dot-com: Cisco fell 86%, Intel fell 75% on capex cycle reversal",
+        "description": "NVDA, AMD, and supply chain face severe demand cliff as data center GPU orders evaporate."
+      },
+      {
+        "channel": "Tech Multiple Compression",
+        "weight": 0.20,
+        "historical_analogue": "2022: high-growth tech multiples compressed 60-80%",
+        "description": "Market reprices AI-beneficiary stocks from growth to value multiples."
+      },
+      {
+        "channel": "Contagion to Broader Tech",
+        "weight": 0.15,
+        "historical_analogue": "2000: Nasdaq decline spread from pure-play internet to all tech",
+        "description": "Sentiment shift drags down broader technology sector regardless of direct AI exposure."
+      }
+    ],
+    "monte_carlo_std_dev": 0.04,
+    "crisis_correlation_boost": 0.25
+  },
+  "oil_shock": {
+    "name": "Major Middle East Oil Shock",
+    "emoji": "\ud83d\udee2\ufe0f",
+    "category": "COMMODITY",
+    "confidence": "HIGH",
+    "description": "Major disruption to Middle East oil production (Iran-Saudi conflict, Strait of Hormuz closure). Oil spikes to $150+/barrel.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.4,
+      "china_revenue_risk": 1.2,
+      "geopolitical_country_risk": 2.0,
+      "currency_risk": 1.5,
+      "regulatory_policy_risk": 1.2,
+      "leverage_credit_risk": 1.3,
+      "earnings_cyclicality": 1.6,
+      "sector_concentration": 1.3,
+      "supply_chain_concentration": 1.5,
+      "esg_energy_transition_risk": 2.0
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.06, "equity_std": 0.10 },
+      "3_month": { "equity_mean": -0.15, "equity_std": 0.20 },
+      "1_year": { "equity_mean": -0.10, "equity_std": 0.25 }
+    },
+    "sector_adjustments": {
+      "Oil/Gas (Integrated)": { "return_modifier": 0.30 },
+      "Oil/Gas (Production and Exploration)": { "return_modifier": 0.35 },
+      "Oilfield Svcs/Equip.": { "return_modifier": 0.20 },
+      "Coal & Related Energy": { "return_modifier": 0.15 },
+      "Green & Renewable Energy": { "return_modifier": 0.05 },
+      "Semiconductor": { "return_modifier": -0.03 },
+      "Computers/Peripherals": { "return_modifier": -0.03 },
+      "Air Transport": { "return_modifier": -0.12 },
+      "Trucking": { "return_modifier": -0.08 },
+      "Retail (General)": { "return_modifier": -0.04 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Energy Cost Spike",
+        "weight": 0.35,
+        "historical_analogue": "1973 OPEC embargo: oil quadrupled, triggering global recession",
+        "description": "Oil above $150/bbl raises input costs for transportation, manufacturing, and consumer goods."
+      },
+      {
+        "channel": "Inflation Resurgence",
+        "weight": 0.25,
+        "historical_analogue": "1979-80: oil shock pushed US CPI above 14%, forcing aggressive Fed hikes",
+        "description": "Energy price spike reignites inflation, forcing central banks to tighten despite slowing growth."
+      },
+      {
+        "channel": "Consumer Squeeze",
+        "weight": 0.20,
+        "historical_analogue": "2008 $147 oil: consumer confidence index fell to record lows",
+        "description": "Higher gasoline and heating costs reduce discretionary spending power."
+      },
+      {
+        "channel": "Geopolitical Risk Premium",
+        "weight": 0.20,
+        "historical_analogue": "2022 Russia-Ukraine: oil rose 40%, VIX spiked, defense stocks rallied",
+        "description": "Broader geopolitical uncertainty increases risk premiums across all asset classes."
+      }
+    ],
+    "monte_carlo_std_dev": 0.035,
+    "crisis_correlation_boost": 0.20
+  },
+  "pandemic_2": {
+    "name": "Pandemic II / Supply Chain Shutdown",
+    "emoji": "\ud83e\udda0",
+    "category": "GEOPOLITICAL",
+    "confidence": "HIGH",
+    "description": "Novel pandemic causes widespread lockdowns and supply chain disruption. Similar to COVID-19 but with lessons learned enabling faster response.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.2,
+      "china_revenue_risk": 1.8,
+      "geopolitical_country_risk": 1.5,
+      "currency_risk": 1.4,
+      "regulatory_policy_risk": 1.5,
+      "leverage_credit_risk": 1.6,
+      "earnings_cyclicality": 2.2,
+      "sector_concentration": 1.5,
+      "supply_chain_concentration": 2.5,
+      "esg_energy_transition_risk": 1.0
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.10, "equity_std": 0.15 },
+      "3_month": { "equity_mean": -0.25, "equity_std": 0.28 },
+      "1_year": { "equity_mean": -0.12, "equity_std": 0.30 }
+    },
+    "sector_adjustments": {
+      "Healthcare Products": { "return_modifier": 0.08 },
+      "Pharma & Drugs": { "return_modifier": 0.06 },
+      "Software (System & Application)": { "return_modifier": 0.04 },
+      "Air Transport": { "return_modifier": -0.20 },
+      "Hotel/Gaming": { "return_modifier": -0.18 },
+      "Restaurant/Dining": { "return_modifier": -0.12 },
+      "Retail (General)": { "return_modifier": -0.06 },
+      "Oil/Gas (Integrated)": { "return_modifier": -0.08 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Supply Chain Disruption",
+        "weight": 0.30,
+        "historical_analogue": "2020 COVID: semiconductor lead times doubled, shipping costs rose 10x",
+        "description": "Factory shutdowns and logistics breakdowns create shortages and production delays."
+      },
+      {
+        "channel": "Demand Destruction",
+        "weight": 0.25,
+        "historical_analogue": "2020 Q2: US GDP fell 31% annualized, worst single quarter on record",
+        "description": "Lockdowns and fear devastate services, travel, and discretionary spending."
+      },
+      {
+        "channel": "Liquidity Crisis",
+        "weight": 0.25,
+        "historical_analogue": "March 2020: S&P 500 fell 34% in 23 trading days, VIX hit 82",
+        "description": "Panic selling creates liquidity vacuum. Credit markets freeze before central bank intervention."
+      },
+      {
+        "channel": "Policy Response Lag",
+        "weight": 0.20,
+        "historical_analogue": "2020: 2-3 weeks between lockdown announcements and fiscal/monetary response",
+        "description": "Markets overshoot downward before massive fiscal and monetary support materializes."
+      }
+    ],
+    "monte_carlo_std_dev": 0.045,
+    "crisis_correlation_boost": 0.30
+  },
+  "us_debt_crisis": {
+    "name": "US Debt Crisis / Credit Downgrade",
+    "emoji": "\ud83c\uddfa\ud83c\uddf8",
+    "category": "MACRO",
+    "confidence": "LOW",
+    "description": "US debt sustainability questioned. Treasury auction failures, further credit downgrades, 10yr yields spike to 7%+, dollar weakens.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 2.2,
+      "china_revenue_risk": 1.3,
+      "geopolitical_country_risk": 1.8,
+      "currency_risk": 2.0,
+      "regulatory_policy_risk": 1.5,
+      "leverage_credit_risk": 2.2,
+      "earnings_cyclicality": 1.8,
+      "sector_concentration": 1.3,
+      "supply_chain_concentration": 1.1,
+      "esg_energy_transition_risk": 1.1
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.08, "equity_std": 0.14 },
+      "3_month": { "equity_mean": -0.22, "equity_std": 0.28 },
+      "1_year": { "equity_mean": -0.30, "equity_std": 0.38 }
+    },
+    "sector_adjustments": {
+      "Banks (Money Center)": { "return_modifier": -0.08 },
+      "Banks (Regional)": { "return_modifier": -0.10 },
+      "REIT": { "return_modifier": -0.10 },
+      "Homebuilding": { "return_modifier": -0.08 },
+      "Precious Metals": { "return_modifier": 0.12 },
+      "Oil/Gas (Integrated)": { "return_modifier": 0.03 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Treasury Market Dysfunction",
+        "weight": 0.30,
+        "historical_analogue": "2011 S&P downgrade: S&P 500 fell 17%, VIX doubled, Treasury paradoxically rallied",
+        "description": "Failed Treasury auctions or severe buyer strikes spike yields and crash risk-free rate assumptions."
+      },
+      {
+        "channel": "Dollar Devaluation",
+        "weight": 0.25,
+        "historical_analogue": "No direct US precedent; 1992 UK ERM crisis saw 15% GBP drop",
+        "description": "Loss of confidence in US fiscal management weakens dollar, raising import costs."
+      },
+      {
+        "channel": "Credit Spread Blowout",
+        "weight": 0.25,
+        "historical_analogue": "2011 European debt crisis: peripheral spreads widened 500bp+",
+        "description": "Rising sovereign risk reprices all credit. Corporate borrowing costs spike across the board."
+      },
+      {
+        "channel": "Global Reserve Diversification",
+        "weight": 0.20,
+        "historical_analogue": "Post-2022 sanctions: central banks accelerated gold purchases",
+        "description": "Foreign central banks reduce USD reserve holdings, structural dollar weakness."
+      }
+    ],
+    "monte_carlo_std_dev": 0.05,
+    "crisis_correlation_boost": 0.30
+  },
+  "big_tech_antitrust": {
+    "name": "Big Tech Regulatory Breakup",
+    "emoji": "\ud83d\udd28",
+    "category": "REGULATORY",
+    "confidence": "LOW",
+    "description": "Major antitrust actions force structural separation of 2-3 Big Tech companies. Market-wide tech repricing as regulatory risk premium increases.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.0,
+      "china_revenue_risk": 1.1,
+      "geopolitical_country_risk": 1.0,
+      "currency_risk": 1.0,
+      "regulatory_policy_risk": 3.0,
+      "leverage_credit_risk": 1.1,
+      "earnings_cyclicality": 1.3,
+      "sector_concentration": 2.0,
+      "supply_chain_concentration": 1.0,
+      "esg_energy_transition_risk": 1.0
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.04, "equity_std": 0.08 },
+      "3_month": { "equity_mean": -0.12, "equity_std": 0.18 },
+      "1_year": { "equity_mean": -0.08, "equity_std": 0.25 }
+    },
+    "sector_adjustments": {
+      "Software (System & Application)": { "return_modifier": -0.08 },
+      "Software (Internet)": { "return_modifier": -0.10 },
+      "Information Services": { "return_modifier": -0.06 },
+      "Semiconductor": { "return_modifier": -0.03 },
+      "Banks (Money Center)": { "return_modifier": 0.02 },
+      "Oil/Gas (Integrated)": { "return_modifier": 0.01 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Platform Moat Destruction",
+        "weight": 0.35,
+        "historical_analogue": "1984 AT&T breakup: stock underperformed for 5 years post-split",
+        "description": "Forced separation eliminates cross-subsidization and network effects that drive margins."
+      },
+      {
+        "channel": "Tech Sector Risk Premium",
+        "weight": 0.30,
+        "historical_analogue": "2020-21 China tech crackdown: Alibaba fell 75%, sector lost $1.5T",
+        "description": "Regulatory uncertainty adds permanent risk premium to all platform businesses."
+      },
+      {
+        "channel": "Index Reweighting",
+        "weight": 0.20,
+        "historical_analogue": "S&P 500 top 10 concentration at 35%+ — breakups would force massive rebalancing",
+        "description": "Mega-cap breakups reduce index concentration, forcing passive fund rebalancing and selling."
+      },
+      {
+        "channel": "Innovation Chill",
+        "weight": 0.15,
+        "historical_analogue": "EU GDPR reduced VC investment in EU adtech by 30%",
+        "description": "Regulatory overhang reduces M&A activity and investment in adjacent tech sectors."
+      }
+    ],
+    "monte_carlo_std_dev": 0.04,
+    "crisis_correlation_boost": 0.15
+  },
+  "usd_crash": {
+    "name": "US Dollar Sharp Decline (-25%)",
+    "emoji": "\ud83d\udcb5",
+    "category": "CURRENCY",
+    "confidence": "LOW",
+    "description": "US dollar index (DXY) drops 25% over 6-12 months due to loss of reserve currency confidence, de-dollarization, or twin deficit crisis.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.5,
+      "china_revenue_risk": 1.2,
+      "geopolitical_country_risk": 1.5,
+      "currency_risk": 3.0,
+      "regulatory_policy_risk": 1.2,
+      "leverage_credit_risk": 1.4,
+      "earnings_cyclicality": 1.3,
+      "sector_concentration": 1.1,
+      "supply_chain_concentration": 1.2,
+      "esg_energy_transition_risk": 1.1
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.04, "equity_std": 0.10 },
+      "3_month": { "equity_mean": -0.10, "equity_std": 0.22 },
+      "1_year": { "equity_mean": -0.05, "equity_std": 0.30 }
+    },
+    "sector_adjustments": {
+      "Oil/Gas (Integrated)": { "return_modifier": 0.08 },
+      "Precious Metals": { "return_modifier": 0.15 },
+      "Semiconductor": { "return_modifier": 0.04 },
+      "Software (System & Application)": { "return_modifier": 0.03 },
+      "Banks (Money Center)": { "return_modifier": -0.04 },
+      "Retail (General)": { "return_modifier": -0.05 },
+      "Air Transport": { "return_modifier": -0.04 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "Import Cost Inflation",
+        "weight": 0.30,
+        "historical_analogue": "2002-08 dollar decline: import prices rose 30%, contributing to inflation",
+        "description": "Weaker dollar raises cost of imported goods, squeezing margins for importers and consumers."
+      },
+      {
+        "channel": "Foreign Earnings Translation",
+        "weight": 0.30,
+        "historical_analogue": "S&P 500 gets ~40% of revenue abroad; weak USD historically boosts reported earnings",
+        "description": "Companies with high international revenue benefit from translation effects, partially offsetting macro drag."
+      },
+      {
+        "channel": "Commodity Price Surge",
+        "weight": 0.20,
+        "historical_analogue": "Dollar-denominated commodities historically move inverse to DXY",
+        "description": "Dollar-denominated commodity prices rise, benefiting producers but hurting consumers."
+      },
+      {
+        "channel": "Capital Flow Reversal",
+        "weight": 0.20,
+        "historical_analogue": "1985 Plaza Accord triggered 50% dollar decline over 2 years",
+        "description": "Foreign investors reduce US asset holdings, creating selling pressure on equities and bonds."
+      }
+    ],
+    "monte_carlo_std_dev": 0.045,
+    "crisis_correlation_boost": 0.20
+  },
+  "russia_nato": {
+    "name": "Russia-NATO Military Escalation",
+    "emoji": "\u2622\ufe0f",
+    "category": "GEOPOLITICAL",
+    "confidence": "LOW",
+    "description": "Russia-NATO conflict escalates beyond Ukraine. Article 5 invoked, direct military confrontation, risk of tactical nuclear weapon use.",
+    "factor_shock_multipliers": {
+      "interest_rate_risk": 1.3,
+      "china_revenue_risk": 1.5,
+      "geopolitical_country_risk": 3.0,
+      "currency_risk": 2.0,
+      "regulatory_policy_risk": 1.5,
+      "leverage_credit_risk": 1.6,
+      "earnings_cyclicality": 2.0,
+      "sector_concentration": 1.5,
+      "supply_chain_concentration": 2.0,
+      "esg_energy_transition_risk": 1.8
+    },
+    "asset_class_shocks": {
+      "1_week": { "equity_mean": -0.12, "equity_std": 0.18 },
+      "3_month": { "equity_mean": -0.28, "equity_std": 0.32 },
+      "1_year": { "equity_mean": -0.20, "equity_std": 0.38 }
+    },
+    "sector_adjustments": {
+      "Aerospace/Defense": { "return_modifier": 0.12 },
+      "Oil/Gas (Integrated)": { "return_modifier": 0.10 },
+      "Oil/Gas (Production and Exploration)": { "return_modifier": 0.12 },
+      "Precious Metals": { "return_modifier": 0.15 },
+      "Air Transport": { "return_modifier": -0.15 },
+      "Hotel/Gaming": { "return_modifier": -0.08 },
+      "Banks (Money Center)": { "return_modifier": -0.05 },
+      "Semiconductor": { "return_modifier": -0.04 }
+    },
+    "transmission_channels": [
+      {
+        "channel": "European Energy Crisis",
+        "weight": 0.30,
+        "historical_analogue": "2022: Russian gas cutoff sent EU natural gas prices up 10x, triggered recession fears",
+        "description": "Complete Russian energy cutoff to Europe spikes global energy prices and triggers EU recession."
+      },
+      {
+        "channel": "Nuclear Risk Premium",
+        "weight": 0.25,
+        "historical_analogue": "1962 Cuban Missile Crisis: S&P 500 fell 7% in a week, recovered quickly after resolution",
+        "description": "Even low-probability nuclear escalation creates extreme risk aversion and flight to safety."
+      },
+      {
+        "channel": "Defense Spending Surge",
+        "weight": 0.25,
+        "historical_analogue": "2022-25: EU defense spending increased 30%+ following Ukraine invasion",
+        "description": "NATO countries dramatically increase defense budgets, benefiting defense contractors."
+      },
+      {
+        "channel": "Global Trade Disruption",
+        "weight": 0.20,
+        "historical_analogue": "2022 Russia sanctions: G7 froze $300B in Russian reserves, trade rerouted",
+        "description": "Expanded sanctions, trade route disruptions, and commodity supply shocks."
+      }
+    ],
+    "monte_carlo_std_dev": 0.055,
+    "crisis_correlation_boost": 0.35
+  }
+}

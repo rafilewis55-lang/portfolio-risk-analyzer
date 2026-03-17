@@ -9,6 +9,7 @@ import traceback
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from typing import Optional
 from pydantic import BaseModel
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +36,18 @@ class AnalysisResponse(BaseModel):
     narrative: str
     warnings: list[str]
     industry_map: dict
+
+
+class StressTestRequest(BaseModel):
+    tickers: list[str]
+    weights: list[float]
+    scenario_id: str
+    time_horizon: str = "3_month"
+    portfolio_value: Optional[float] = None
+    existing_risk_scores: Optional[dict] = None
+    industry_map: Optional[dict] = None
+    individual_volatilities: Optional[dict] = None
+    correlation_matrix: Optional[dict] = None
 
 
 
@@ -176,6 +189,118 @@ async def analyze_pdf(req: PortfolioRequest):
             content={"error": str(e)},
         )
 
+
+
+@app.get("/api/scenarios")
+async def list_scenarios():
+    """Return list of available stress test scenarios."""
+    try:
+        from backend.scenario_engine import get_scenario_list
+        return {"scenarios": get_scenario_list()}
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@app.post("/api/stress-test")
+async def stress_test(req: StressTestRequest):
+    """Run scenario stress test against a portfolio."""
+    try:
+        from backend.scenario_engine import (
+            load_scenarios,
+            compute_stressed_risk_scores,
+            compute_stock_scenario_impact,
+            run_monte_carlo,
+            compute_scenario_portfolio_summary,
+            get_protection_recommendations,
+        )
+        from backend.narrative_generator import generate_scenario_narrative
+        import numpy as np
+
+        scenarios = load_scenarios()
+        if req.scenario_id not in scenarios:
+            return JSONResponse(
+                status_code=400,
+                content={"error": f"Unknown scenario: {req.scenario_id}"},
+            )
+
+        scenario = scenarios[req.scenario_id]
+        tickers = [t.upper().strip() for t in req.tickers]
+        weights_list = req.weights
+        weight_sum = sum(weights_list)
+        if weight_sum > 0:
+            weights_list = [w / weight_sum for w in weights_list]
+        weights = {t: w for t, w in zip(tickers, weights_list)}
+
+        # Stressed risk scores
+        stressed_scores = None
+        if req.existing_risk_scores:
+            stressed_scores = compute_stressed_risk_scores(req.existing_risk_scores, scenario)
+
+        # Per-stock impacts
+        industry_map = req.industry_map or {}
+        individual_vols = req.individual_volatilities or {}
+        vol_values = [individual_vols.get(t, 0.30) for t in tickers]
+        median_vol = float(np.median(vol_values)) if vol_values else 0.30
+
+        stock_impacts = []
+        for ticker, weight in weights.items():
+            industry = industry_map.get(ticker, "Diversified")
+            risk_scores = {}
+            if req.existing_risk_scores and "per_holding" in req.existing_risk_scores:
+                risk_scores = req.existing_risk_scores["per_holding"].get(ticker, {})
+            indiv_vol = individual_vols.get(ticker, 0.30)
+
+            impact = compute_stock_scenario_impact(
+                ticker=ticker,
+                weight=weight,
+                industry=industry,
+                risk_scores=risk_scores,
+                scenario=scenario,
+                time_horizon=req.time_horizon,
+                individual_volatility=indiv_vol,
+                median_volatility=median_vol,
+            )
+            stock_impacts.append(impact)
+
+        # Monte Carlo
+        corr_matrix = req.correlation_matrix or {}
+        mc_results = run_monte_carlo(
+            stock_impacts=stock_impacts,
+            correlation_matrix=corr_matrix,
+            scenario=scenario,
+            time_horizon=req.time_horizon,
+        )
+
+        # Portfolio summary
+        summary = compute_scenario_portfolio_summary(
+            stock_impacts=stock_impacts,
+            monte_carlo_results=mc_results,
+            scenario=scenario,
+            time_horizon=req.time_horizon,
+            portfolio_value=req.portfolio_value,
+        )
+        summary["scenario_id"] = req.scenario_id
+
+        # Stressed risk scores
+        summary["stressed_risk_scores"] = stressed_scores
+
+        # Protection recommendations
+        protections = get_protection_recommendations(scenario, stock_impacts, industry_map)
+        summary["protections"] = protections
+
+        # Narrative
+        narrative = generate_scenario_narrative(summary, scenario, req.time_horizon)
+        summary["narrative"] = narrative
+
+        return _serialize(summary)
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "detail": traceback.format_exc()},
+        )
 
 
 @app.post("/api/parse-portfolio")
