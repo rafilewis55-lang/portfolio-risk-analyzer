@@ -23,24 +23,104 @@
     <main class="container">
         <!-- Input Section -->
         <div class="input-section" id="inputSection">
-            <h2>Portfolio Holdings</h2>
-            <table class="holdings-table" id="holdingsTable">
-                <thead>
-                    <tr>
-                        <th style="width:30%">Ticker</th>
-                        <th style="width:25%">Weight (%)</th>
-                        <th style="width:15%"></th>
-                    </tr>
-                </thead>
-                <tbody id="holdingsBody">
-                </tbody>
-            </table>
-            <div class="btn-row">
-                <button class="btn btn-secondary" onclick="addRow()">+ Add Holding</button>
-                <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()" disabled>
-                    Analyze Portfolio
-                </button>
-                <span class="weight-status" id="weightStatus"></span>
+            <div class="input-tabs">
+                <button class="input-tab active" onclick="switchInputTab('manual')">Manual Entry</button>
+                <button class="input-tab" onclick="switchInputTab('upload')">Upload File</button>
+            </div>
+
+            <!-- Manual Entry Tab -->
+            <div class="input-tab-content active" id="manualTab">
+                <table class="holdings-table" id="holdingsTable">
+                    <thead>
+                        <tr>
+                            <th style="width:30%">Ticker</th>
+                            <th style="width:25%">Weight (%)</th>
+                            <th style="width:15%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="holdingsBody">
+                    </tbody>
+                </table>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="addRow()">+ Add Holding</button>
+                    <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()" disabled>
+                        Analyze Portfolio
+                    </button>
+                    <span class="weight-status" id="weightStatus"></span>
+                </div>
+            </div>
+
+            <!-- Upload Tab -->
+            <div class="input-tab-content" id="uploadTab">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-dropzone" id="dropzone"
+                         ondrop="handleDrop(event)" ondragover="event.preventDefault(); this.classList.add('dragover')"
+                         ondragleave="this.classList.remove('dragover')">
+                        <div class="upload-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <p class="upload-text">Drag & drop your file here, or</p>
+                        <label class="btn btn-secondary upload-btn">
+                            Browse Files
+                            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="handleFileSelect(event)" hidden>
+                        </label>
+                        <p class="upload-formats">Accepts .xlsx, .xls, or .csv</p>
+                    </div>
+
+                    <div class="upload-instructions">
+                        <h4>File Format Instructions</h4>
+                        <p>Your file should have <strong>tickers in one column</strong> and <strong>weights (%) in another</strong>. The parser is flexible:</p>
+                        <ul>
+                            <li>Column headers can be named anything (Ticker, Symbol, Stock, etc.) &mdash; or you can skip headers entirely</li>
+                            <li>Weights can be percentages (25%) or decimals (0.25) &mdash; both are auto-detected</li>
+                            <li>Extra columns are ignored &mdash; only the ticker and weight columns are used</li>
+                            <li>For CSV: comma, tab, or semicolon delimiters all work</li>
+                        </ul>
+                        <div class="upload-example">
+                            <strong>Example:</strong>
+                            <table class="example-table">
+                                <tr><th>A</th><th>B</th></tr>
+                                <tr><td>AAPL</td><td>25</td></tr>
+                                <tr><td>MSFT</td><td>25</td></tr>
+                                <tr><td>NVDA</td><td>20</td></tr>
+                                <tr><td>JPM</td><td>15</td></tr>
+                                <tr><td>XOM</td><td>15</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload preview (shown after file parsed) -->
+                <div class="upload-preview" id="uploadPreview" style="display:none">
+                    <div class="upload-preview-header">
+                        <h4 id="uploadFileName"></h4>
+                        <button class="btn btn-danger" onclick="clearUpload()">Clear</button>
+                    </div>
+                    <table class="holdings-table" id="uploadTable">
+                        <thead>
+                            <tr>
+                                <th style="width:10%"></th>
+                                <th style="width:30%">Ticker</th>
+                                <th style="width:25%">Weight (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="uploadBody"></tbody>
+                    </table>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="loadUploadToManual()">Edit in Manual Entry</button>
+                        <button class="btn btn-primary" id="uploadAnalyzeBtn" onclick="analyzeUpload()">
+                            Analyze Portfolio
+                        </button>
+                        <span class="weight-status" id="uploadWeightStatus"></span>
+                    </div>
+                </div>
+
+                <!-- Upload error -->
+                <div class="upload-error" id="uploadError" style="display:none"></div>
             </div>
         </div>
 

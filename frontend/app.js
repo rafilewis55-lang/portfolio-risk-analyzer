@@ -396,3 +396,154 @@ function resetView() {
     document.getElementById("warningsSection").style.display = "none";
     analysisData = null;
 }
+
+
+// ── File Upload ────────────────────────────────────────────────────────────
+
+let uploadedHoldings = [];
+
+function switchInputTab(tab) {
+    document.querySelectorAll('.input-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.input-tab-content').forEach(t => t.classList.remove('active'));
+
+    if (tab === 'manual') {
+        document.querySelectorAll('.input-tab')[0].classList.add('active');
+        document.getElementById('manualTab').classList.add('active');
+    } else {
+        document.querySelectorAll('.input-tab')[1].classList.add('active');
+        document.getElementById('uploadTab').classList.add('active');
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+}
+
+function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+}
+
+async function processFile(file) {
+    const errorEl = document.getElementById('uploadError');
+    const previewEl = document.getElementById('uploadPreview');
+    const areaEl = document.getElementById('uploadArea');
+    errorEl.style.display = 'none';
+    previewEl.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const resp = await fetch('/api/parse-portfolio', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok || data.error) {
+            errorEl.textContent = data.error || 'Failed to parse file';
+            errorEl.style.display = 'block';
+            return;
+        }
+
+        uploadedHoldings = data.holdings;
+        renderUploadPreview(data.holdings, data.filename);
+        areaEl.style.display = 'none';
+        previewEl.style.display = 'block';
+
+    } catch (err) {
+        errorEl.textContent = 'Error uploading file: ' + err.message;
+        errorEl.style.display = 'block';
+    }
+}
+
+function renderUploadPreview(holdings, filename) {
+    document.getElementById('uploadFileName').textContent = filename + ` (${holdings.length} holdings found)`;
+
+    const tbody = document.getElementById('uploadBody');
+    tbody.innerHTML = '';
+
+    let total = 0;
+    holdings.forEach((h, i) => {
+        total += h.weight;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="text-align:center;color:var(--text-muted);font-size:0.8rem">${i + 1}</td>
+            <td><strong>${h.ticker}</strong></td>
+            <td>${h.weight}%</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    const statusEl = document.getElementById('uploadWeightStatus');
+    const btn = document.getElementById('uploadAnalyzeBtn');
+
+    if (Math.abs(total - 100) > 0.5) {
+        statusEl.textContent = `Weight sum: ${total.toFixed(1)}% (must equal 100%)`;
+        statusEl.className = 'weight-status weight-bad';
+        btn.disabled = true;
+    } else {
+        statusEl.textContent = `Weight sum: ${total.toFixed(1)}%`;
+        statusEl.className = 'weight-status weight-ok';
+        btn.disabled = false;
+    }
+}
+
+function clearUpload() {
+    uploadedHoldings = [];
+    document.getElementById('uploadPreview').style.display = 'none';
+    document.getElementById('uploadArea').style.display = 'flex';
+    document.getElementById('uploadError').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+}
+
+function loadUploadToManual() {
+    // Clear existing manual rows
+    document.getElementById('holdingsBody').innerHTML = '';
+
+    // Add uploaded holdings to manual entry
+    uploadedHoldings.forEach(h => addRow(h.ticker, h.weight));
+    updateWeightStatus();
+
+    // Switch to manual tab
+    switchInputTab('manual');
+    clearUpload();
+}
+
+async function analyzeUpload() {
+    if (uploadedHoldings.length === 0) return;
+
+    const tickers = uploadedHoldings.map(h => h.ticker);
+    const weights = uploadedHoldings.map(h => h.weight / 100);
+
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('resultsSection').classList.remove('active');
+    document.getElementById('warningsSection').style.display = 'none';
+
+    try {
+        const resp = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tickers, weights }),
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.error || 'Analysis failed');
+        }
+
+        analysisData = await resp.json();
+        renderResults(analysisData);
+    } catch (err) {
+        alert('Error: ' + err.message);
+        document.getElementById('inputSection').style.display = 'block';
+    } finally {
+        document.getElementById('loadingSection').style.display = 'none';
+    }
+}

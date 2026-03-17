@@ -178,6 +178,181 @@ async def analyze_pdf(req: PortfolioRequest):
 
 
 
+@app.post("/api/parse-portfolio")
+async def parse_portfolio(request: Request):
+    """Parse an uploaded Excel or CSV file to extract tickers and weights."""
+    import io
+    import re
+
+    form = await request.form()
+    file = form.get("file")
+    if not file:
+        return JSONResponse(status_code=400, content={"error": "No file uploaded"})
+
+    filename = file.filename.lower()
+    content = await file.read()
+
+    try:
+        if filename.endswith((".xlsx", ".xls")):
+            holdings = _parse_excel(io.BytesIO(content))
+        elif filename.endswith(".csv"):
+            holdings = _parse_csv(content.decode("utf-8-sig"))
+        else:
+            return JSONResponse(status_code=400, content={"error": "Unsupported format. Use .xlsx, .xls, or .csv"})
+
+        if not holdings:
+            return JSONResponse(status_code=400, content={
+                "error": "Could not find ticker/weight data. Make sure your file has tickers in one column and weights in another."
+            })
+
+        return {"holdings": holdings, "filename": file.filename}
+
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"error": f"Failed to parse file: {e}"})
+
+
+def _is_ticker(val: str) -> bool:
+    """Check if a string looks like a stock ticker."""
+    import re
+    val = str(val).strip()
+    if not val or len(val) > 10:
+        return False
+    # Tickers: 1-5 uppercase letters, optionally with - or . (BRK-B, BRK.B)
+    return bool(re.match(r'^[A-Z]{1,5}([.\-][A-Z]{1,2})?$', val.upper()))
+
+
+def _is_weight(val) -> float | None:
+    """Try to parse a value as a weight. Returns percentage (e.g., 25.0) or None."""
+    if val is None:
+        return None
+    s = str(val).strip().rstrip('%')
+    try:
+        num = float(s)
+        # If it looks like a decimal (0.0 to 1.0), convert to percentage
+        if 0 < num <= 1.0 and '.' in s:
+            return round(num * 100, 2)
+        elif 0 < num <= 100:
+            return round(num, 2)
+        return None
+    except (ValueError, TypeError):
+        return None
+
+
+def _parse_excel(buf) -> list[dict]:
+    """Parse Excel file, dynamically finding ticker and weight columns."""
+    import openpyxl
+
+    wb = openpyxl.load_workbook(buf, read_only=True, data_only=True)
+    ws = wb.active
+
+    rows = []
+    for row in ws.iter_rows(values_only=True):
+        rows.append(list(row))
+
+    wb.close()
+    return _extract_holdings_from_rows(rows)
+
+
+def _parse_csv(text: str) -> list[dict]:
+    """Parse CSV text, auto-detecting delimiter."""
+    import csv
+    import io
+
+    # Auto-detect delimiter
+    for delim in [',', '\t', ';']:
+        reader = csv.reader(io.StringIO(text), delimiter=delim)
+        rows = [row for row in reader if any(cell.strip() for cell in row)]
+        if rows and len(rows[0]) >= 2:
+            return _extract_holdings_from_rows(rows)
+
+    return []
+
+
+def _extract_holdings_from_rows(rows: list[list]) -> list[dict]:
+    """Find ticker and weight columns from a 2D array of rows."""
+    if not rows:
+        return []
+
+    # Skip empty rows at the top
+    while rows and all(not str(c).strip() for c in rows[0] if c is not None):
+        rows.pop(0)
+
+    if not rows:
+        return []
+
+    # Try to detect which columns are tickers and weights
+    # Strategy: scan all columns, find the one with the most ticker-like values
+    # and the one with the most weight-like values
+    n_cols = max(len(r) for r in rows)
+
+    # Check if first row is a header
+    first_row = rows[0]
+    header_keywords_ticker = {'ticker', 'symbol', 'stock', 'name', 'holding', 'security', 'position'}
+    header_keywords_weight = {'weight', 'allocation', 'pct', 'percent', '%', 'share', 'proportion'}
+
+    ticker_col = None
+    weight_col = None
+    data_start = 0
+
+    # Check headers
+    for i, cell in enumerate(first_row):
+        if cell is None:
+            continue
+        val = str(cell).strip().lower()
+        if any(kw in val for kw in header_keywords_ticker):
+            ticker_col = i
+        elif any(kw in val for kw in header_keywords_weight):
+            weight_col = i
+
+    if ticker_col is not None or weight_col is not None:
+        data_start = 1  # skip header row
+
+    # If headers didn't resolve both columns, scan data to find them
+    if ticker_col is None or weight_col is None:
+        col_ticker_scores = [0] * n_cols
+        col_weight_scores = [0] * n_cols
+
+        for row in rows[data_start:data_start + 20]:  # sample first 20 data rows
+            for ci in range(min(len(row), n_cols)):
+                cell = row[ci]
+                if cell is None:
+                    continue
+                if _is_ticker(str(cell)):
+                    col_ticker_scores[ci] += 1
+                if _is_weight(cell) is not None:
+                    col_weight_scores[ci] += 1
+
+        if ticker_col is None:
+            best = max(range(n_cols), key=lambda i: col_ticker_scores[i])
+            if col_ticker_scores[best] > 0:
+                ticker_col = best
+
+        if weight_col is None:
+            # Pick the best weight column that isn't the ticker column
+            candidates = [(i, col_weight_scores[i]) for i in range(n_cols) if i != ticker_col]
+            if candidates:
+                best = max(candidates, key=lambda x: x[1])
+                if best[1] > 0:
+                    weight_col = best[0]
+
+    if ticker_col is None or weight_col is None:
+        return []
+
+    # Extract holdings
+    holdings = []
+    for row in rows[data_start:]:
+        if ticker_col >= len(row) or weight_col >= len(row):
+            continue
+
+        ticker_val = str(row[ticker_col]).strip().upper() if row[ticker_col] else ""
+        weight_val = _is_weight(row[weight_col])
+
+        if _is_ticker(ticker_val) and weight_val is not None:
+            holdings.append({"ticker": ticker_val, "weight": weight_val})
+
+    return holdings
+
+
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
