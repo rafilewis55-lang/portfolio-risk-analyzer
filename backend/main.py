@@ -37,6 +37,8 @@ class AnalysisResponse(BaseModel):
     industry_map: dict
 
 
+
+
 # ── Core analysis ───────────────────────────────────────────────────────────
 
 def run_analysis(req: PortfolioRequest) -> dict:
@@ -173,6 +175,7 @@ async def analyze_pdf(req: PortfolioRequest):
             status_code=500,
             content={"error": str(e)},
         )
+
 
 
 @app.get("/api/health")
