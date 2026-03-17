@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Risk Exposure Analyzer</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Portfolio Risk Exposure Analyzer</h1>
+                    <p>10-factor risk scoring, diversification quality, hidden overlap detection</p>
+                </div>
+                <a href="/help" class="help-link" target="_blank">? Help &amp; Methodology</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Input Section -->
+        <div class="input-section" id="inputSection">
+            <h2>Portfolio Holdings</h2>
+            <table class="holdings-table" id="holdingsTable">
+                <thead>
+                    <tr>
+                        <th style="width:30%">Ticker</th>
+                        <th style="width:25%">Weight (%)</th>
+                        <th style="width:15%"></th>
+                    </tr>
+                </thead>
+                <tbody id="holdingsBody">
+                </tbody>
+            </table>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="addRow()">+ Add Holding</button>
+                <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()" disabled>
+                    Analyze Portfolio
+                </button>
+                <span class="weight-status" id="weightStatus"></span>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loadingSection" style="display:none">
+            <div class="spinner"></div>
+            <p>Fetching market data and running analysis...</p>
+            <p style="font-size:0.8rem;color:#aaa;margin-top:8px">This may take 30-60 seconds on first run</p>
+        </div>
+
+        <!-- Warnings -->
+        <div class="warnings" id="warningsSection" style="display:none"></div>
+
+        <!-- Results -->
+        <div class="results-section" id="resultsSection">
+            <!-- Download bar -->
+            <div class="download-bar">
+                <button class="btn btn-download" onclick="downloadExcel()">Download Excel Report</button>
+                <button class="btn btn-download" onclick="downloadPDF()">Download PDF Report</button>
+                <button class="btn btn-secondary" onclick="resetView()">New Analysis</button>
+            </div>
+
+            <!-- Panel 1: Diversification Scorecard -->
+            <div class="panel" id="scorecardPanel">
+                <h3 class="panel-title">Diversification Scorecard
+                    <span class="info-icon">i<span class="tooltip">Key metrics measuring how well your portfolio spreads risk across independent sources. Higher diversification = lower risk from any single holding.</span></span>
+                </h3>
+                <div class="scorecard-grid" id="scorecardGrid"></div>
+            </div>
+
+            <!-- Panel 2: Risk Factor Heatmap -->
+            <div class="panel" id="heatmapPanel">
+                <h3 class="panel-title">Risk Factor Heatmap
+                    <span class="info-icon">i<span class="tooltip">Each holding scored 1-10 across 10 risk dimensions. Green (1-3) = low exposure, yellow (4-5) = moderate, orange (6-7) = elevated, red (8-10) = high. Portfolio column is the weight-adjusted average.</span></span>
+                </h3>
+                <div class="heatmap-container" id="heatmapContainer"></div>
+            </div>
+
+            <!-- Panel 3: Correlation Matrix -->
+            <div class="panel" id="corrPanel">
+                <h3 class="panel-title">Correlation Matrix
+                    <span class="info-icon">i<span class="tooltip">Pairwise return correlations over the lookback period. Values near +1.0 (red) mean stocks move together; near 0 (white) means independent; negative (green) means they move opposite. Lower correlations = better diversification.</span></span>
+                </h3>
+                <div id="corrContainer"></div>
+            </div>
+
+            <!-- Panel 4: Risk Overlaps -->
+            <div class="panel" id="overlapPanel">
+                <h3 class="panel-title">Idiosyncratic Risk Overlaps
+                    <span class="info-icon">i<span class="tooltip">Flags risk themes where 2+ holdings both score 6 or higher. Severity is based on combined portfolio weight and average score. CRITICAL = >60% weight with score >8. These represent hidden concentration risk.</span></span>
+                </h3>
+                <div class="overlap-cards" id="overlapCards"></div>
+            </div>
+
+            <!-- Panel 5: Risk Narrative -->
+            <div class="panel" id="narrativePanel">
+                <h3 class="panel-title">Risk Narrative
+                    <span class="info-icon">i<span class="tooltip">Plain-English summary generated from the quantitative analysis. Covers key risk drivers, diversification quality, and actionable recommendations.</span></span>
+                </h3>
+                <div class="narrative-text" id="narrativeText"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Damodaran industry betas and country risk premiums as of January 2026.
+        Source: <a href="https://pages.stern.nyu.edu/~adamodar/" target="_blank">pages.stern.nyu.edu/~adamodar</a>.
+        Data may be stale &mdash; check source for updates.
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

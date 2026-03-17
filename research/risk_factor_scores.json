@@ -1,0 +1,2187 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-03-17",
+  "data_source": "Damodaran (January 2026), domain knowledge assignments",
+  "scoring_rubric": {
+    "scale": "1-10 (integer), 1=lowest risk, 10=highest risk",
+    "leverage_credit_risk": "Derived quantitatively from Damodaran D/E ratio. Breakpoints: <=5%->1, <=15%->2, <=25%->3, <=35%->4, <=50%->5, <=75%->6, <=100%->7, <=150%->8, <=250%->9, >250%->10",
+    "earnings_cyclicality": "Derived quantitatively from Damodaran std dev of operating income. Breakpoints: <=10%->1, <=15%->2, <=20%->3, <=28%->4, <=38%->5, <=52%->6, <=70%->7, <=100%->8, <=185%->9, >185%->10. null std_dev uses neutral score 5.",
+    "interest_rate_risk": "Duration sensitivity proxy. Long-duration assets (utilities, REITs, life insurance) score 7-9. Growth sectors with near-term cash flows score 2-4.",
+    "china_revenue_risk": "Estimated % revenue exposure to China by sector. Semiconductors, electronics, autos highest (7-9). Domestic services lowest (1-3).",
+    "geopolitical_country_risk": "EM/frontier market revenue exposure, defense contracts, commodity extraction in unstable regions.",
+    "currency_risk": "% foreign revenue. Global multinationals, commodities, tech with global sales score 6-8. Domestic utilities/banks score 1-3.",
+    "regulatory_policy_risk": "Government intervention sensitivity. Healthcare, financials, utilities, telecom score 6-9. Industrial manufacturing scores 3-5.",
+    "sector_concentration_risk": "Tendency of sector to be highly concentrated (few dominant players) in GICS indexes. Semiconductors, banks, REITs score 6-8.",
+    "supply_chain_concentration_risk": "Dependency on Taiwan/TSMC/semiconductor inputs. Semis score 10. Pure software/services score 1-2.",
+    "esg_energy_transition_risk": "Fossil fuel intensity, carbon emissions, stranded asset risk. Coal=10, oil=9, utilities=5-6, software=2."
+  },
+  "risk_factors": {
+    "1_interest_rate_risk": "Interest rate sensitivity via P/E duration proxy and sector leverage to 10Y treasury moves",
+    "2_china_revenue_risk": "Estimated revenue exposure to China by sector/industry",
+    "3_geopolitical_country_risk": "Exposure to emerging/frontier markets, geopolitical instability",
+    "4_currency_risk": "Foreign revenue exposure and currency translation risk",
+    "5_regulatory_policy_risk": "Government intervention, regulation changes, and policy risk",
+    "6_leverage_credit_risk": "Quantitative: derived from D/E ratio in Damodaran data",
+    "7_earnings_cyclicality": "Quantitative: derived from std dev of operating income in Damodaran data",
+    "8_sector_concentration_risk": "GICS index overlap tendency, market concentration",
+    "9_supply_chain_concentration_risk": "Taiwan/TSMC/semiconductor supply chain dependency",
+    "10_esg_energy_transition_risk": "Fossil fuel intensity, carbon risk, energy transition exposure"
+  },
+  "industries": {
+    "Advertising": {
+      "damodaran_data": {
+        "de_ratio_pct": 40.2,
+        "std_dev_op_income_pct": 15.17,
+        "levered_beta": 1.21,
+        "unlevered_beta": 0.93
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.2
+    },
+    "Aerospace/Defense": {
+      "damodaran_data": {
+        "de_ratio_pct": 15.56,
+        "std_dev_op_income_pct": 21.86,
+        "levered_beta": 0.95,
+        "unlevered_beta": 0.85
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 8,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.3
+    },
+    "Air Transport": {
+      "damodaran_data": {
+        "de_ratio_pct": 91.17,
+        "std_dev_op_income_pct": 210.43,
+        "levered_beta": 1.19,
+        "unlevered_beta": 0.7
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 10,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 8
+      },
+      "composite_risk_score": 6.6
+    },
+    "Apparel": {
+      "damodaran_data": {
+        "de_ratio_pct": 31.29,
+        "std_dev_op_income_pct": 26.8,
+        "levered_beta": 0.94,
+        "unlevered_beta": 0.76
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 5.1
+    },
+    "Auto & Truck": {
+      "damodaran_data": {
+        "de_ratio_pct": 19.7,
+        "std_dev_op_income_pct": 38.88,
+        "levered_beta": 1.46,
+        "unlevered_beta": 1.27
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.8
+    },
+    "Auto Parts": {
+      "damodaran_data": {
+        "de_ratio_pct": 41.46,
+        "std_dev_op_income_pct": 21.22,
+        "levered_beta": 1.34,
+        "unlevered_beta": 1.02
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.2
+    },
+    "Bank (Money Center)": {
+      "damodaran_data": {
+        "de_ratio_pct": 164.19,
+        "std_dev_op_income_pct": null,
+        "levered_beta": 0.76,
+        "unlevered_beta": 0.34
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 9,
+        "leverage_credit_risk": 9,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 8,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 6.1
+    },
+    "Banks (Regional)": {
+      "damodaran_data": {
+        "de_ratio_pct": 52.1,
+        "std_dev_op_income_pct": 55.33,
+        "levered_beta": 0.4,
+        "unlevered_beta": 0.29
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.9
+    },
+    "Beverage (Alcoholic)": {
+      "damodaran_data": {
+        "de_ratio_pct": 43.34,
+        "std_dev_op_income_pct": 18.74,
+        "levered_beta": 0.81,
+        "unlevered_beta": 0.61
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.1
+    },
+    "Beverage (Soft)": {
+      "damodaran_data": {
+        "de_ratio_pct": 20.59,
+        "std_dev_op_income_pct": 18.65,
+        "levered_beta": 0.64,
+        "unlevered_beta": 0.56
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 3.9
+    },
+    "Broadcasting": {
+      "damodaran_data": {
+        "de_ratio_pct": 85.85,
+        "std_dev_op_income_pct": 24.68,
+        "levered_beta": 0.47,
+        "unlevered_beta": 0.29
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.2
+    },
+    "Brokerage & Investment Banking": {
+      "damodaran_data": {
+        "de_ratio_pct": 135.57,
+        "std_dev_op_income_pct": null,
+        "levered_beta": 1.17,
+        "unlevered_beta": 0.58
+      },
+      "risk_scores": {
+        "interest_rate_risk": 8,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 9,
+        "leverage_credit_risk": 8,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.8
+    },
+    "Building Materials": {
+      "damodaran_data": {
+        "de_ratio_pct": 26.0,
+        "std_dev_op_income_pct": 38.06,
+        "levered_beta": 1.11,
+        "unlevered_beta": 0.93
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.6
+    },
+    "Business & Consumer Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 19.72,
+        "std_dev_op_income_pct": 27.1,
+        "levered_beta": 0.89,
+        "unlevered_beta": 0.77
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 3.8
+    },
+    "Cable TV": {
+      "damodaran_data": {
+        "de_ratio_pct": 146.94,
+        "std_dev_op_income_pct": 26.88,
+        "levered_beta": 0.74,
+        "unlevered_beta": 0.35
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 8,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.4
+    },
+    "Chemical (Basic)": {
+      "damodaran_data": {
+        "de_ratio_pct": 99.35,
+        "std_dev_op_income_pct": 39.28,
+        "levered_beta": 1.01,
+        "unlevered_beta": 0.58
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.4
+    },
+    "Chemical (Diversified)": {
+      "damodaran_data": {
+        "de_ratio_pct": 176.11,
+        "std_dev_op_income_pct": 45.64,
+        "levered_beta": 0.85,
+        "unlevered_beta": 0.37
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 9,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.4
+    },
+    "Chemical (Specialty)": {
+      "damodaran_data": {
+        "de_ratio_pct": 29.88,
+        "std_dev_op_income_pct": 21.76,
+        "levered_beta": 0.97,
+        "unlevered_beta": 0.79
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 4.5
+    },
+    "Coal & Related Energy": {
+      "damodaran_data": {
+        "de_ratio_pct": 7.14,
+        "std_dev_op_income_pct": 242.5,
+        "levered_beta": 1.07,
+        "unlevered_beta": 1.02
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 10,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 10
+      },
+      "composite_risk_score": 5.5
+    },
+    "Computer Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 25.1,
+        "std_dev_op_income_pct": 19.63,
+        "levered_beta": 1.09,
+        "unlevered_beta": 0.92
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.1
+    },
+    "Computers/Peripherals": {
+      "damodaran_data": {
+        "de_ratio_pct": 4.62,
+        "std_dev_op_income_pct": 30.57,
+        "levered_beta": 1.35,
+        "unlevered_beta": 1.31
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 8,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 1,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 8,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.1
+    },
+    "Construction Supplies": {
+      "damodaran_data": {
+        "de_ratio_pct": 17.62,
+        "std_dev_op_income_pct": 38.6,
+        "levered_beta": 1.15,
+        "unlevered_beta": 1.02
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.4
+    },
+    "Diversified": {
+      "damodaran_data": {
+        "de_ratio_pct": 15.55,
+        "std_dev_op_income_pct": 69.9,
+        "levered_beta": 0.88,
+        "unlevered_beta": 0.79
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 3,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.3
+    },
+    "Drugs (Biotechnology)": {
+      "damodaran_data": {
+        "de_ratio_pct": 13.04,
+        "std_dev_op_income_pct": 40.52,
+        "levered_beta": 1.14,
+        "unlevered_beta": 1.03
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.3
+    },
+    "Drugs (Pharmaceutical)": {
+      "damodaran_data": {
+        "de_ratio_pct": 14.54,
+        "std_dev_op_income_pct": 26.77,
+        "levered_beta": 0.98,
+        "unlevered_beta": 0.89
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.3
+    },
+    "Education": {
+      "damodaran_data": {
+        "de_ratio_pct": 24.38,
+        "std_dev_op_income_pct": 37.79,
+        "levered_beta": 0.78,
+        "unlevered_beta": 0.66
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 3.6
+    },
+    "Electrical Equipment": {
+      "damodaran_data": {
+        "de_ratio_pct": 12.0,
+        "std_dev_op_income_pct": 19.79,
+        "levered_beta": 1.25,
+        "unlevered_beta": 1.15
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.7
+    },
+    "Electronics (Consumer & Office)": {
+      "damodaran_data": {
+        "de_ratio_pct": 5.8,
+        "std_dev_op_income_pct": null,
+        "levered_beta": 0.87,
+        "unlevered_beta": 0.83
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 8,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 7,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.1
+    },
+    "Electronics (General)": {
+      "damodaran_data": {
+        "de_ratio_pct": 11.01,
+        "std_dev_op_income_pct": 25.55,
+        "levered_beta": 0.97,
+        "unlevered_beta": 0.9
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.7
+    },
+    "Engineering/Construction": {
+      "damodaran_data": {
+        "de_ratio_pct": 14.01,
+        "std_dev_op_income_pct": 40.66,
+        "levered_beta": 1.21,
+        "unlevered_beta": 1.09
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.9
+    },
+    "Entertainment": {
+      "damodaran_data": {
+        "de_ratio_pct": 15.91,
+        "std_dev_op_income_pct": 33.72,
+        "levered_beta": 0.83,
+        "unlevered_beta": 0.74
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.2
+    },
+    "Environmental & Waste Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 21.45,
+        "std_dev_op_income_pct": 33.05,
+        "levered_beta": 0.95,
+        "unlevered_beta": 0.81
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 3.7
+    },
+    "Farming/Agriculture": {
+      "damodaran_data": {
+        "de_ratio_pct": 51.85,
+        "std_dev_op_income_pct": 49.7,
+        "levered_beta": 1.13,
+        "unlevered_beta": 0.81
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 3,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 5.3
+    },
+    "Financial Svcs. (Non-bank & Insurance)": {
+      "damodaran_data": {
+        "de_ratio_pct": 272.13,
+        "std_dev_op_income_pct": 33.72,
+        "levered_beta": 0.97,
+        "unlevered_beta": 0.32
+      },
+      "risk_scores": {
+        "interest_rate_risk": 8,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 10,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.7
+    },
+    "Food Processing": {
+      "damodaran_data": {
+        "de_ratio_pct": 43.73,
+        "std_dev_op_income_pct": 9.38,
+        "levered_beta": 0.61,
+        "unlevered_beta": 0.46
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 1,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.0
+    },
+    "Food Wholesalers": {
+      "damodaran_data": {
+        "de_ratio_pct": 46.97,
+        "std_dev_op_income_pct": 35.62,
+        "levered_beta": 0.87,
+        "unlevered_beta": 0.64
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 3.9
+    },
+    "Furn/Home Furnishings": {
+      "damodaran_data": {
+        "de_ratio_pct": 42.33,
+        "std_dev_op_income_pct": 20.43,
+        "levered_beta": 0.82,
+        "unlevered_beta": 0.62
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.6
+    },
+    "Green & Renewable Energy": {
+      "damodaran_data": {
+        "de_ratio_pct": 113.11,
+        "std_dev_op_income_pct": 28.78,
+        "levered_beta": 0.86,
+        "unlevered_beta": 0.46
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 8,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 1
+      },
+      "composite_risk_score": 4.9
+    },
+    "Healthcare Products": {
+      "damodaran_data": {
+        "de_ratio_pct": 12.79,
+        "std_dev_op_income_pct": 30.9,
+        "levered_beta": 0.91,
+        "unlevered_beta": 0.83
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.3
+    },
+    "Healthcare Support Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 35.43,
+        "std_dev_op_income_pct": 24.13,
+        "levered_beta": 0.87,
+        "unlevered_beta": 0.69
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 3.9
+    },
+    "Healthcare Information and Technology": {
+      "damodaran_data": {
+        "de_ratio_pct": 15.74,
+        "std_dev_op_income_pct": 35.53,
+        "levered_beta": 1.11,
+        "unlevered_beta": 0.99
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 3.9
+    },
+    "Homebuilding": {
+      "damodaran_data": {
+        "de_ratio_pct": 21.34,
+        "std_dev_op_income_pct": 59.59,
+        "levered_beta": 0.91,
+        "unlevered_beta": 0.78
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.7
+    },
+    "Hospitals/Healthcare Facilities": {
+      "damodaran_data": {
+        "de_ratio_pct": 59.92,
+        "std_dev_op_income_pct": 20.29,
+        "levered_beta": 0.8,
+        "unlevered_beta": 0.55
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.1
+    },
+    "Hotel/Gaming": {
+      "damodaran_data": {
+        "de_ratio_pct": 39.75,
+        "std_dev_op_income_pct": 99.05,
+        "levered_beta": 1.08,
+        "unlevered_beta": 0.83
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 8,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.6
+    },
+    "Household Products": {
+      "damodaran_data": {
+        "de_ratio_pct": 18.15,
+        "std_dev_op_income_pct": 12.19,
+        "levered_beta": 0.82,
+        "unlevered_beta": 0.72
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.0
+    },
+    "Information Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 33.17,
+        "std_dev_op_income_pct": 40.82,
+        "levered_beta": 0.92,
+        "unlevered_beta": 0.74
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.0
+    },
+    "Insurance (General)": {
+      "damodaran_data": {
+        "de_ratio_pct": 25.63,
+        "std_dev_op_income_pct": 42.1,
+        "levered_beta": 0.67,
+        "unlevered_beta": 0.56
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.6
+    },
+    "Insurance (Life)": {
+      "damodaran_data": {
+        "de_ratio_pct": 67.84,
+        "std_dev_op_income_pct": 28.26,
+        "levered_beta": 0.64,
+        "unlevered_beta": 0.43
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.0
+    },
+    "Insurance (Prop/Cas.)": {
+      "damodaran_data": {
+        "de_ratio_pct": 14.83,
+        "std_dev_op_income_pct": 37.9,
+        "levered_beta": 0.48,
+        "unlevered_beta": 0.44
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.4
+    },
+    "Investments & Asset Management": {
+      "damodaran_data": {
+        "de_ratio_pct": 32.69,
+        "std_dev_op_income_pct": 23.01,
+        "levered_beta": 0.66,
+        "unlevered_beta": 0.53
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.9
+    },
+    "Machinery": {
+      "damodaran_data": {
+        "de_ratio_pct": 14.69,
+        "std_dev_op_income_pct": 23.4,
+        "levered_beta": 0.96,
+        "unlevered_beta": 0.87
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.5
+    },
+    "Metals & Mining": {
+      "damodaran_data": {
+        "de_ratio_pct": 10.98,
+        "std_dev_op_income_pct": 53.67,
+        "levered_beta": 1.04,
+        "unlevered_beta": 0.96
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.5
+    },
+    "Office Equipment & Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 48.1,
+        "std_dev_op_income_pct": 14.22,
+        "levered_beta": 1.33,
+        "unlevered_beta": 0.98
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.1
+    },
+    "Oil/Gas (Integrated)": {
+      "damodaran_data": {
+        "de_ratio_pct": 13.85,
+        "std_dev_op_income_pct": 106.56,
+        "levered_beta": 0.3,
+        "unlevered_beta": 0.27
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 8,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 9,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 9
+      },
+      "composite_risk_score": 5.8
+    },
+    "Oil/Gas (Production and Exploration)": {
+      "damodaran_data": {
+        "de_ratio_pct": 37.59,
+        "std_dev_op_income_pct": 185.49,
+        "levered_beta": 0.72,
+        "unlevered_beta": 0.56
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 8,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 10,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 9
+      },
+      "composite_risk_score": 5.9
+    },
+    "Oil/Gas Distribution": {
+      "damodaran_data": {
+        "de_ratio_pct": 58.53,
+        "std_dev_op_income_pct": 56.92,
+        "levered_beta": 0.67,
+        "unlevered_beta": 0.47
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 8
+      },
+      "composite_risk_score": 5.5
+    },
+    "Oilfield Svcs/Equip.": {
+      "damodaran_data": {
+        "de_ratio_pct": 37.36,
+        "std_dev_op_income_pct": 82.21,
+        "levered_beta": 0.95,
+        "unlevered_beta": 0.74
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 8,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 8
+      },
+      "composite_risk_score": 5.3
+    },
+    "Packaging & Container": {
+      "damodaran_data": {
+        "de_ratio_pct": 55.11,
+        "std_dev_op_income_pct": 13.14,
+        "levered_beta": 1.02,
+        "unlevered_beta": 0.72
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 4.3
+    },
+    "Paper/Forest Products": {
+      "damodaran_data": {
+        "de_ratio_pct": 43.69,
+        "std_dev_op_income_pct": 67.29,
+        "levered_beta": 0.96,
+        "unlevered_beta": 0.72
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.1
+    },
+    "Power": {
+      "damodaran_data": {
+        "de_ratio_pct": 74.15,
+        "std_dev_op_income_pct": 17.04,
+        "levered_beta": 0.48,
+        "unlevered_beta": 0.31
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 4.6
+    },
+    "Precious Metals": {
+      "damodaran_data": {
+        "de_ratio_pct": 7.28,
+        "std_dev_op_income_pct": 67.6,
+        "levered_beta": 0.84,
+        "unlevered_beta": 0.79
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.6
+    },
+    "Publishing & Newspapers": {
+      "damodaran_data": {
+        "de_ratio_pct": 23.94,
+        "std_dev_op_income_pct": 12.15,
+        "levered_beta": 0.56,
+        "unlevered_beta": 0.48
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 3.3
+    },
+    "R.E.I.T.": {
+      "damodaran_data": {
+        "de_ratio_pct": 84.46,
+        "std_dev_op_income_pct": 23.2,
+        "levered_beta": 0.64,
+        "unlevered_beta": 0.39
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 2,
+        "currency_risk": 2,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.3
+    },
+    "Real Estate (Development)": {
+      "damodaran_data": {
+        "de_ratio_pct": 101.83,
+        "std_dev_op_income_pct": 81.39,
+        "levered_beta": 0.84,
+        "unlevered_beta": 0.48
+      },
+      "risk_scores": {
+        "interest_rate_risk": 8,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 8,
+        "earnings_cyclicality": 8,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.6
+    },
+    "Real Estate (General/Diversified)": {
+      "damodaran_data": {
+        "de_ratio_pct": 53.56,
+        "std_dev_op_income_pct": 46.67,
+        "levered_beta": 0.81,
+        "unlevered_beta": 0.58
+      },
+      "risk_scores": {
+        "interest_rate_risk": 8,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.9
+    },
+    "Real Estate (Operations & Services)": {
+      "damodaran_data": {
+        "de_ratio_pct": 24.64,
+        "std_dev_op_income_pct": 29.71,
+        "levered_beta": 0.97,
+        "unlevered_beta": 0.81
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.2
+    },
+    "Recreation": {
+      "damodaran_data": {
+        "de_ratio_pct": 62.99,
+        "std_dev_op_income_pct": 25.09,
+        "levered_beta": 1.02,
+        "unlevered_beta": 0.7
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.5
+    },
+    "Reinsurance": {
+      "damodaran_data": {
+        "de_ratio_pct": 43.47,
+        "std_dev_op_income_pct": 21.97,
+        "levered_beta": 0.58,
+        "unlevered_beta": 0.44
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.5
+    },
+    "Restaurant/Dining": {
+      "damodaran_data": {
+        "de_ratio_pct": 27.22,
+        "std_dev_op_income_pct": 22.1,
+        "levered_beta": 0.92,
+        "unlevered_beta": 0.77
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.2
+    },
+    "Retail (Automotive)": {
+      "damodaran_data": {
+        "de_ratio_pct": 45.36,
+        "std_dev_op_income_pct": 29.76,
+        "levered_beta": 0.94,
+        "unlevered_beta": 0.7
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.5
+    },
+    "Retail (Building Supply)": {
+      "damodaran_data": {
+        "de_ratio_pct": 23.29,
+        "std_dev_op_income_pct": 28.49,
+        "levered_beta": 1.54,
+        "unlevered_beta": 1.31
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.2
+    },
+    "Retail (Distributors)": {
+      "damodaran_data": {
+        "de_ratio_pct": 28.24,
+        "std_dev_op_income_pct": 38.7,
+        "levered_beta": 0.95,
+        "unlevered_beta": 0.78
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.4
+    },
+    "Retail (General)": {
+      "damodaran_data": {
+        "de_ratio_pct": 7.94,
+        "std_dev_op_income_pct": 37.61,
+        "levered_beta": 0.81,
+        "unlevered_beta": 0.76
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.4
+    },
+    "Retail (Grocery and Food)": {
+      "damodaran_data": {
+        "de_ratio_pct": 51.95,
+        "std_dev_op_income_pct": 33.4,
+        "levered_beta": 1.12,
+        "unlevered_beta": 0.8
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.3
+    },
+    "Retail (REITs)": {
+      "damodaran_data": {
+        "de_ratio_pct": 56.42,
+        "std_dev_op_income_pct": 16.63,
+        "levered_beta": 0.62,
+        "unlevered_beta": 0.44
+      },
+      "risk_scores": {
+        "interest_rate_risk": 9,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 2,
+        "currency_risk": 2,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 3,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 1,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.1
+    },
+    "Retail (Special Lines)": {
+      "damodaran_data": {
+        "de_ratio_pct": 19.76,
+        "std_dev_op_income_pct": 25.77,
+        "levered_beta": 1.09,
+        "unlevered_beta": 0.95
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 4.2
+    },
+    "Rubber & Tires": {
+      "damodaran_data": {
+        "de_ratio_pct": 358.47,
+        "std_dev_op_income_pct": 61.96,
+        "levered_beta": 0.53,
+        "unlevered_beta": 0.14
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 10,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 5.7
+    },
+    "Semiconductor": {
+      "damodaran_data": {
+        "de_ratio_pct": 2.59,
+        "std_dev_op_income_pct": 41.94,
+        "levered_beta": 1.52,
+        "unlevered_beta": 1.49
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 8,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 1,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 10,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.9
+    },
+    "Semiconductor Equip": {
+      "damodaran_data": {
+        "de_ratio_pct": 4.86,
+        "std_dev_op_income_pct": 49.58,
+        "levered_beta": 1.4,
+        "unlevered_beta": 1.35
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 8,
+        "geopolitical_country_risk": 7,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 1,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 7,
+        "supply_chain_concentration_risk": 10,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 5.9
+    },
+    "Shipbuilding & Marine": {
+      "damodaran_data": {
+        "de_ratio_pct": 22.55,
+        "std_dev_op_income_pct": 70.6,
+        "levered_beta": 0.75,
+        "unlevered_beta": 0.64
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 8,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 5.3
+    },
+    "Shoe": {
+      "damodaran_data": {
+        "de_ratio_pct": 11.94,
+        "std_dev_op_income_pct": 26.37,
+        "levered_beta": 1.02,
+        "unlevered_beta": 0.93
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 3,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 6,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 4.7
+    },
+    "Software (Entertainment)": {
+      "damodaran_data": {
+        "de_ratio_pct": 2.04,
+        "std_dev_op_income_pct": 59.01,
+        "levered_beta": 1.03,
+        "unlevered_beta": 1.01
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 1,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 3.9
+    },
+    "Software (Internet)": {
+      "damodaran_data": {
+        "de_ratio_pct": 12.3,
+        "std_dev_op_income_pct": 234.02,
+        "levered_beta": 1.69,
+        "unlevered_beta": 1.55
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 6,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 10,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 5.0
+    },
+    "Software (System & Application)": {
+      "damodaran_data": {
+        "de_ratio_pct": 5.58,
+        "std_dev_op_income_pct": 48.63,
+        "levered_beta": 1.28,
+        "unlevered_beta": 1.23
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 6,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 6,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 2
+      },
+      "composite_risk_score": 4.4
+    },
+    "Steel": {
+      "damodaran_data": {
+        "de_ratio_pct": 23.51,
+        "std_dev_op_income_pct": 85.3,
+        "levered_beta": 1.06,
+        "unlevered_beta": 0.9
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 7,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 8,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 7
+      },
+      "composite_risk_score": 5.5
+    },
+    "Telecom (Wireless)": {
+      "damodaran_data": {
+        "de_ratio_pct": 51.95,
+        "std_dev_op_income_pct": 58.11,
+        "levered_beta": 0.54,
+        "unlevered_beta": 0.39
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 7,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 5,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.5
+    },
+    "Telecom. Equipment": {
+      "damodaran_data": {
+        "de_ratio_pct": 9.22,
+        "std_dev_op_income_pct": 11.3,
+        "levered_beta": 0.92,
+        "unlevered_beta": 0.86
+      },
+      "risk_scores": {
+        "interest_rate_risk": 4,
+        "china_revenue_risk": 8,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 2,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 7,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.1
+    },
+    "Telecom. Services": {
+      "damodaran_data": {
+        "de_ratio_pct": 96.06,
+        "std_dev_op_income_pct": 9.46,
+        "levered_beta": 0.63,
+        "unlevered_beta": 0.37
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 5,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 1,
+        "sector_concentration_risk": 6,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 4
+      },
+      "composite_risk_score": 5.1
+    },
+    "Tobacco": {
+      "damodaran_data": {
+        "de_ratio_pct": 22.97,
+        "std_dev_op_income_pct": 10.13,
+        "levered_beta": 0.79,
+        "unlevered_beta": 0.68
+      },
+      "risk_scores": {
+        "interest_rate_risk": 3,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 5,
+        "currency_risk": 7,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 3,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 8
+      },
+      "composite_risk_score": 4.8
+    },
+    "Transportation": {
+      "damodaran_data": {
+        "de_ratio_pct": 36.45,
+        "std_dev_op_income_pct": 54.77,
+        "levered_beta": 0.86,
+        "unlevered_beta": 0.68
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 5,
+        "geopolitical_country_risk": 6,
+        "currency_risk": 6,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 5,
+        "earnings_cyclicality": 7,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 4,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 5.2
+    },
+    "Transportation (Railroads)": {
+      "damodaran_data": {
+        "de_ratio_pct": 27.79,
+        "std_dev_op_income_pct": 13.37,
+        "levered_beta": 0.98,
+        "unlevered_beta": 0.81
+      },
+      "risk_scores": {
+        "interest_rate_risk": 6,
+        "china_revenue_risk": 3,
+        "geopolitical_country_risk": 3,
+        "currency_risk": 3,
+        "regulatory_policy_risk": 5,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 5
+      },
+      "composite_risk_score": 3.9
+    },
+    "Trucking": {
+      "damodaran_data": {
+        "de_ratio_pct": 25.23,
+        "std_dev_op_income_pct": 33.03,
+        "levered_beta": 1.01,
+        "unlevered_beta": 0.85
+      },
+      "risk_scores": {
+        "interest_rate_risk": 5,
+        "china_revenue_risk": 4,
+        "geopolitical_country_risk": 4,
+        "currency_risk": 4,
+        "regulatory_policy_risk": 4,
+        "leverage_credit_risk": 4,
+        "earnings_cyclicality": 5,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 4.4
+    },
+    "Utility (General)": {
+      "damodaran_data": {
+        "de_ratio_pct": 81.48,
+        "std_dev_op_income_pct": 13.12,
+        "levered_beta": 0.24,
+        "unlevered_beta": 0.15
+      },
+      "risk_scores": {
+        "interest_rate_risk": 8,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 2,
+        "currency_risk": 2,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 7,
+        "earnings_cyclicality": 2,
+        "sector_concentration_risk": 5,
+        "supply_chain_concentration_risk": 3,
+        "esg_energy_transition_risk": 6
+      },
+      "composite_risk_score": 4.5
+    },
+    "Utility (Water)": {
+      "damodaran_data": {
+        "de_ratio_pct": 62.36,
+        "std_dev_op_income_pct": 21.22,
+        "levered_beta": 0.41,
+        "unlevered_beta": 0.28
+      },
+      "risk_scores": {
+        "interest_rate_risk": 7,
+        "china_revenue_risk": 2,
+        "geopolitical_country_risk": 2,
+        "currency_risk": 2,
+        "regulatory_policy_risk": 8,
+        "leverage_credit_risk": 6,
+        "earnings_cyclicality": 4,
+        "sector_concentration_risk": 4,
+        "supply_chain_concentration_risk": 2,
+        "esg_energy_transition_risk": 3
+      },
+      "composite_risk_score": 4.0
+    }
+  },
+  "yfinance_to_damodaran_mapping": {
+    "description": "Maps (yfinance_sector, yfinance_industry) tuples to Damodaran industry names. Key format: 'sector|industry'.",
+    "usage": "Look up ticker sector+industry from yfinance info dict, then concatenate with '|' to find Damodaran industry. Fall back to sector_only if not found.",
+    "exact_mapping": {
+      "Technology|Semiconductors": "Semiconductor",
+      "Technology|Semiconductor Equipment & Materials": "Semiconductor Equip",
+      "Technology|Software\u2014Application": "Software (System & Application)",
+      "Technology|Software\u2014Infrastructure": "Software (System & Application)",
+      "Technology|Information Technology Services": "Computer Services",
+      "Technology|Computer Hardware": "Computers/Peripherals",
+      "Technology|Electronic Components": "Electronics (General)",
+      "Technology|Consumer Electronics": "Electronics (Consumer & Office)",
+      "Technology|Scientific & Technical Instruments": "Electrical Equipment",
+      "Technology|Solar": "Green & Renewable Energy",
+      "Technology|Communication Equipment": "Telecom. Equipment",
+      "Technology|Electronic Gaming & Multimedia": "Software (Entertainment)",
+      "Technology|Internet Content & Information": "Software (Internet)",
+      "Technology|Data Storage": "Computers/Peripherals",
+      "Communication Services|Internet Content & Information": "Software (Internet)",
+      "Communication Services|Telecom Services": "Telecom. Services",
+      "Communication Services|Wireless Telecom Services": "Telecom (Wireless)",
+      "Communication Services|Telecom Equipment": "Telecom. Equipment",
+      "Communication Services|Broadcasting": "Broadcasting",
+      "Communication Services|Entertainment": "Entertainment",
+      "Communication Services|Electronic Gaming & Multimedia": "Software (Entertainment)",
+      "Communication Services|Publishing": "Publishing & Newspapers",
+      "Communication Services|Advertising Agencies": "Advertising",
+      "Healthcare|Biotechnology": "Drugs (Biotechnology)",
+      "Healthcare|Drug Manufacturers\u2014General": "Drugs (Pharmaceutical)",
+      "Healthcare|Drug Manufacturers\u2014Specialty & Generic": "Drugs (Pharmaceutical)",
+      "Healthcare|Medical Devices": "Healthcare Products",
+      "Healthcare|Medical Instruments & Supplies": "Healthcare Products",
+      "Healthcare|Health Information Services": "Healthcare Information and Technology",
+      "Healthcare|Healthcare Plans": "Healthcare Support Services",
+      "Healthcare|Medical Care Facilities": "Hospitals/Healthcare Facilities",
+      "Healthcare|Diagnostics & Research": "Healthcare Products",
+      "Healthcare|Pharmaceutical Retailers": "Drugs (Pharmaceutical)",
+      "Healthcare|Medical Distribution": "Healthcare Support Services",
+      "Financial Services|Banks\u2014Diversified": "Bank (Money Center)",
+      "Financial Services|Banks\u2014Regional": "Banks (Regional)",
+      "Financial Services|Insurance\u2014Life": "Insurance (Life)",
+      "Financial Services|Insurance\u2014Property & Casualty": "Insurance (Prop/Cas.)",
+      "Financial Services|Insurance\u2014Diversified": "Insurance (General)",
+      "Financial Services|Insurance\u2014Specialty": "Insurance (General)",
+      "Financial Services|Insurance\u2014Reinsurance": "Reinsurance",
+      "Financial Services|Capital Markets": "Brokerage & Investment Banking",
+      "Financial Services|Asset Management": "Investments & Asset Management",
+      "Financial Services|Financial Data & Stock Exchanges": "Information Services",
+      "Financial Services|Credit Services": "Financial Svcs. (Non-bank & Insurance)",
+      "Financial Services|Mortgage Finance": "Financial Svcs. (Non-bank & Insurance)",
+      "Financial Services|Financial Conglomerates": "Diversified",
+      "Financials|Banks\u2014Diversified": "Bank (Money Center)",
+      "Financials|Banks\u2014Regional": "Banks (Regional)",
+      "Financials|Capital Markets": "Brokerage & Investment Banking",
+      "Financials|Asset Management": "Investments & Asset Management",
+      "Consumer Cyclical|Auto Manufacturers": "Auto & Truck",
+      "Consumer Cyclical|Auto Parts": "Auto Parts",
+      "Consumer Cyclical|Apparel Retail": "Apparel",
+      "Consumer Cyclical|Apparel Manufacturing": "Apparel",
+      "Consumer Cyclical|Footwear & Accessories": "Shoe",
+      "Consumer Cyclical|Home Improvement Retail": "Retail (Building Supply)",
+      "Consumer Cyclical|Specialty Retail": "Retail (Special Lines)",
+      "Consumer Cyclical|Department Stores": "Retail (General)",
+      "Consumer Cyclical|Discount Stores": "Retail (General)",
+      "Consumer Cyclical|Auto & Truck Dealerships": "Retail (Automotive)",
+      "Consumer Cyclical|Restaurants": "Restaurant/Dining",
+      "Consumer Cyclical|Lodging": "Hotel/Gaming",
+      "Consumer Cyclical|Gambling": "Hotel/Gaming",
+      "Consumer Cyclical|Resorts & Casinos": "Hotel/Gaming",
+      "Consumer Cyclical|Leisure": "Recreation",
+      "Consumer Cyclical|Home Furnishings & Fixtures": "Furn/Home Furnishings",
+      "Consumer Cyclical|Furnishings, Fixtures & Appliances": "Furn/Home Furnishings",
+      "Consumer Cyclical|Personal Services": "Business & Consumer Services",
+      "Consumer Cyclical|Travel Services": "Recreation",
+      "Consumer Cyclical|Internet Retail": "Retail (Special Lines)",
+      "Consumer Cyclical|Publishing": "Publishing & Newspapers",
+      "Consumer Discretionary|Auto Manufacturers": "Auto & Truck",
+      "Consumer Discretionary|Auto Parts": "Auto Parts",
+      "Consumer Discretionary|Specialty Retail": "Retail (Special Lines)",
+      "Consumer Discretionary|Restaurants": "Restaurant/Dining",
+      "Consumer Discretionary|Leisure": "Recreation",
+      "Consumer Defensive|Beverages\u2014Non-Alcoholic": "Beverage (Soft)",
+      "Consumer Defensive|Beverages\u2014Alcoholic": "Beverage (Alcoholic)",
+      "Consumer Defensive|Beverages\u2014Brewers": "Beverage (Alcoholic)",
+      "Consumer Defensive|Beverages\u2014Wineries & Distilleries": "Beverage (Alcoholic)",
+      "Consumer Defensive|Grocery Stores": "Retail (Grocery and Food)",
+      "Consumer Defensive|Food Distribution": "Food Wholesalers",
+      "Consumer Defensive|Packaged Foods": "Food Processing",
+      "Consumer Defensive|Tobacco": "Tobacco",
+      "Consumer Defensive|Household & Personal Products": "Household Products",
+      "Consumer Defensive|Drug Stores": "Retail (Special Lines)",
+      "Consumer Defensive|Education & Training Services": "Education",
+      "Consumer Staples|Beverages\u2014Non-Alcoholic": "Beverage (Soft)",
+      "Consumer Staples|Packaged Foods": "Food Processing",
+      "Consumer Staples|Tobacco": "Tobacco",
+      "Consumer Staples|Household & Personal Products": "Household Products",
+      "Energy|Oil & Gas Integrated": "Oil/Gas (Integrated)",
+      "Energy|Oil & Gas E&P": "Oil/Gas (Production and Exploration)",
+      "Energy|Oil & Gas Drilling": "Oilfield Svcs/Equip.",
+      "Energy|Oil & Gas Equipment & Services": "Oilfield Svcs/Equip.",
+      "Energy|Oil & Gas Midstream": "Oil/Gas Distribution",
+      "Energy|Oil & Gas Refining & Marketing": "Oil/Gas Distribution",
+      "Energy|Coal": "Coal & Related Energy",
+      "Energy|Uranium": "Metals & Mining",
+      "Energy|Renewable Utilities": "Green & Renewable Energy",
+      "Basic Materials|Steel": "Steel",
+      "Basic Materials|Aluminum": "Metals & Mining",
+      "Basic Materials|Copper": "Metals & Mining",
+      "Basic Materials|Other Industrial Metals & Mining": "Metals & Mining",
+      "Basic Materials|Gold": "Precious Metals",
+      "Basic Materials|Silver": "Precious Metals",
+      "Basic Materials|Specialty Chemicals": "Chemical (Specialty)",
+      "Basic Materials|Chemicals": "Chemical (Basic)",
+      "Basic Materials|Agricultural Inputs": "Chemical (Specialty)",
+      "Basic Materials|Paper & Paper Products": "Paper/Forest Products",
+      "Basic Materials|Packaging & Containers": "Packaging & Container",
+      "Basic Materials|Building Materials": "Building Materials",
+      "Basic Materials|Lumber & Wood Production": "Paper/Forest Products",
+      "Materials|Steel": "Steel",
+      "Materials|Gold": "Precious Metals",
+      "Materials|Chemicals": "Chemical (Basic)",
+      "Industrials|Aerospace & Defense": "Aerospace/Defense",
+      "Industrials|Airlines": "Air Transport",
+      "Industrials|Railroads": "Transportation (Railroads)",
+      "Industrials|Trucking": "Trucking",
+      "Industrials|Marine Shipping": "Shipbuilding & Marine",
+      "Industrials|Integrated Freight & Logistics": "Transportation",
+      "Industrials|Air Freight & Logistics": "Transportation",
+      "Industrials|Farm & Heavy Construction Machinery": "Machinery",
+      "Industrials|Industrial Machinery": "Machinery",
+      "Industrials|Specialty Industrial Machinery": "Machinery",
+      "Industrials|Electrical Equipment & Parts": "Electrical Equipment",
+      "Industrials|Engineering & Construction": "Engineering/Construction",
+      "Industrials|Building Products & Equipment": "Building Materials",
+      "Industrials|Waste Management": "Environmental & Waste Services",
+      "Industrials|Pollution & Treatment Controls": "Environmental & Waste Services",
+      "Industrials|Business Services": "Business & Consumer Services",
+      "Industrials|Staffing & Employment Services": "Business & Consumer Services",
+      "Industrials|Security & Protection Services": "Business & Consumer Services",
+      "Industrials|Tools & Accessories": "Machinery",
+      "Industrials|Rental & Leasing Services": "Business & Consumer Services",
+      "Industrials|Conglomerates": "Diversified",
+      "Industrials|Consulting Services": "Business & Consumer Services",
+      "Industrials|Research & Consulting Services": "Business & Consumer Services",
+      "Real Estate|REIT\u2014Retail": "Retail (REITs)",
+      "Real Estate|REIT\u2014Office": "R.E.I.T.",
+      "Real Estate|REIT\u2014Industrial": "R.E.I.T.",
+      "Real Estate|REIT\u2014Residential": "R.E.I.T.",
+      "Real Estate|REIT\u2014Healthcare Facilities": "R.E.I.T.",
+      "Real Estate|REIT\u2014Hotel & Motel": "R.E.I.T.",
+      "Real Estate|REIT\u2014Diversified": "R.E.I.T.",
+      "Real Estate|REIT\u2014Specialty": "R.E.I.T.",
+      "Real Estate|REIT\u2014Mortgage": "Financial Svcs. (Non-bank & Insurance)",
+      "Real Estate|Real Estate\u2014Development": "Real Estate (Development)",
+      "Real Estate|Real Estate\u2014Diversified": "Real Estate (General/Diversified)",
+      "Real Estate|Real Estate Services": "Real Estate (Operations & Services)",
+      "Utilities|Utilities\u2014Regulated Electric": "Utility (General)",
+      "Utilities|Utilities\u2014Regulated Gas": "Utility (General)",
+      "Utilities|Utilities\u2014Regulated Water": "Utility (Water)",
+      "Utilities|Utilities\u2014Diversified": "Utility (General)",
+      "Utilities|Utilities\u2014Independent Power Producers": "Power",
+      "Utilities|Utilities\u2014Renewable": "Green & Renewable Energy"
+    },
+    "sector_only_fallback": {
+      "Technology": "Software (System & Application)",
+      "Communication Services": "Telecom. Services",
+      "Healthcare": "Healthcare Products",
+      "Financial Services": "Investments & Asset Management",
+      "Financials": "Investments & Asset Management",
+      "Consumer Cyclical": "Retail (Special Lines)",
+      "Consumer Discretionary": "Retail (Special Lines)",
+      "Consumer Defensive": "Food Processing",
+      "Consumer Staples": "Food Processing",
+      "Energy": "Oil/Gas (Production and Exploration)",
+      "Basic Materials": "Chemical (Specialty)",
+      "Materials": "Chemical (Specialty)",
+      "Industrials": "Machinery",
+      "Real Estate": "R.E.I.T.",
+      "Utilities": "Utility (General)"
+    }
+  }
+}

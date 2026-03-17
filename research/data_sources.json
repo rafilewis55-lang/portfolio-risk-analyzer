@@ -1,0 +1,14 @@
+{
+  "ctryprem": {
+    "source": "https://pages.stern.nyu.edu/~adamodar/pc/datasets/ctryprem.xlsx",
+    "last_updated_by_damodaran": "January 2026",
+    "downloaded": "2026-03-17",
+    "note": "Country default spreads and risk premiums based on Moody's ratings and CDS spreads"
+  },
+  "betas": {
+    "source": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html",
+    "last_updated_by_damodaran": "January 2026",
+    "downloaded": "2026-03-17",
+    "note": "Industry betas, D/E ratios, and unlevered betas for ~100 industries"
+  }
+}
