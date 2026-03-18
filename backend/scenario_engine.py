@@ -149,14 +149,30 @@ def compute_stock_scenario_impact(
                 sector_modifier = adj["return_modifier"]
                 break
 
-    # Sensitivity from stressed composite score
+    # Sensitivity: how exposed is this stock to the factors THIS scenario stresses?
+    # Weight each factor's original score by how much the scenario stresses it.
+    # A multiplier of 1.0 means the factor is irrelevant to this scenario (weight = 0).
+    # Higher multipliers mean the factor is more central to the scenario.
     multipliers = scenario["factor_shock_multipliers"]
-    stressed_scores = []
+    original_scores = []
+    relevance_weights = []
     for factor, score in risk_scores.items():
         mult = multipliers.get(factor, 1.0)
-        stressed_scores.append(min(10, max(1, score * mult)))
-    stressed_composite = np.mean(stressed_scores) if stressed_scores else 5.0
-    sensitivity = stressed_composite / 5.0  # 5 = neutral, >1 = more sensitive
+        original_scores.append(score)
+        relevance_weights.append(max(0.0, mult - 1.0))
+
+    total_relevance = sum(relevance_weights)
+    if total_relevance > 0 and original_scores:
+        weighted_score = sum(
+            s * w for s, w in zip(original_scores, relevance_weights)
+        ) / total_relevance
+    else:
+        weighted_score = 5.0  # neutral fallback
+
+    # Score of 5 = average exposure → sensitivity 1.0
+    # Score of 8 = high exposure → sensitivity 1.6
+    # Score of 2 = low exposure → sensitivity 0.4
+    sensitivity = weighted_score / 5.0
 
     # Expected return
     expected_return = base_mean * sensitivity + sector_modifier
