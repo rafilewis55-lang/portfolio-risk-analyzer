@@ -58,14 +58,45 @@ function addRow(ticker = "", weight = "") {
     const tbody = document.getElementById("holdingsBody");
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td><input type="text" class="ticker-input" placeholder="e.g. AAPL"
-            value="${ticker}" oninput="updateWeightStatus()"></td>
-        <td><input type="number" class="weight-input" placeholder="25"
-            value="${weight}" min="0" max="100" step="0.1" oninput="updateWeightStatus()"></td>
+        <td>
+            <input type="text" class="ticker-input" placeholder="e.g. AAPL"
+                value="${ticker}" oninput="updateWeightStatus()">
+            <span class="input-error" style="display:none"></span>
+        </td>
+        <td>
+            <input type="number" class="weight-input" placeholder="25"
+                value="${weight}" min="0" max="100" step="0.1" oninput="updateWeightStatus()">
+            <span class="input-error" style="display:none"></span>
+        </td>
         <td><button class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
     `;
     tbody.appendChild(row);
     updateWeightStatus();
+}
+
+function validateTicker(val) {
+    if (!val || !val.trim()) return null;
+    const raw = val.trim();
+    const upper = raw.toUpperCase();
+    const validPattern = /^[A-Z]{1,5}([.\-][A-Z]{1,2})?$/;
+    if (validPattern.test(upper)) return null;
+
+    if (/\s/.test(raw)) return `Tickers don't contain spaces — add each stock as a separate row`;
+    if (/^\d+(\.\d+)?$/.test(raw)) return `Looks like a number — enter a ticker like AAPL here`;
+    if (/^[a-zA-Z]+$/.test(raw) && raw.length > 5) {
+        return `Too long for a ticker (max 5 letters) — did you mean "${upper.slice(0, 5)}"?`;
+    }
+    if (/[^A-Za-z.\-]/.test(upper)) return `Tickers only contain letters and optionally "." or "-"`;
+    return `"${raw}" doesn't look like a valid ticker (e.g. AAPL, BRK-B, TSM)`;
+}
+
+function validateWeight(val) {
+    if (val === "" || val === null || val === undefined) return null;
+    const num = parseFloat(val);
+    if (isNaN(num)) return `Enter a number (e.g. 25)`;
+    if (num < 0) return `Weight must be positive`;
+    if (num > 100) return `Weight can't exceed 100%`;
+    return null;
 }
 
 function removeRow(btn) {
@@ -87,12 +118,58 @@ function getHoldings() {
 }
 
 function updateWeightStatus() {
+    const rows = document.querySelectorAll("#holdingsBody tr");
+    let total = 0;
+    let rowErrors = 0;
+    let hasAnyEntry = false;
+
+    rows.forEach((row, idx) => {
+        const tickerInput = row.querySelector(".ticker-input");
+        const weightInput = row.querySelector(".weight-input");
+        const tickerError = row.querySelectorAll(".input-error")[0];
+        const weightError = row.querySelectorAll(".input-error")[1];
+
+        const tickerVal = tickerInput.value.trim();
+        const weightVal = weightInput.value.trim();
+        const weightNum = parseFloat(weightVal) || 0;
+
+        if (tickerVal || weightVal) hasAnyEntry = true;
+        if (tickerVal && weightNum > 0) total += weightNum;
+
+        // Validate ticker
+        const tickerMsg = tickerVal ? validateTicker(tickerVal) : null;
+        if (tickerMsg) {
+            tickerInput.classList.add("input-invalid");
+            tickerError.textContent = tickerMsg;
+            tickerError.style.display = "block";
+            rowErrors++;
+        } else {
+            tickerInput.classList.remove("input-invalid");
+            tickerError.style.display = "none";
+        }
+
+        // Validate weight
+        const weightMsg = weightVal ? validateWeight(weightVal) : null;
+        if (weightMsg) {
+            weightInput.classList.add("input-invalid");
+            weightError.textContent = weightMsg;
+            weightError.style.display = "block";
+            rowErrors++;
+        } else {
+            weightInput.classList.remove("input-invalid");
+            weightError.style.display = "none";
+        }
+    });
+
     const holdings = getHoldings();
-    const total = holdings.reduce((sum, h) => sum + h.weight, 0);
     const statusEl = document.getElementById("weightStatus");
     const btn = document.getElementById("analyzeBtn");
 
-    if (holdings.length === 0) {
+    if (rowErrors > 0) {
+        statusEl.textContent = `Fix ${rowErrors} input error${rowErrors > 1 ? "s" : ""} above`;
+        statusEl.className = "weight-status weight-bad";
+        btn.disabled = true;
+    } else if (!hasAnyEntry || holdings.length === 0) {
         statusEl.textContent = "Add at least one holding";
         statusEl.className = "weight-status weight-bad";
         btn.disabled = true;
